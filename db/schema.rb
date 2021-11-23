@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_23_223608) do
+ActiveRecord::Schema.define(version: 2021_11_23_233041) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,7 +41,7 @@ ActiveRecord::Schema.define(version: 2021_11_23_223608) do
     t.integer "worst_rounds_dropped"
     t.integer "pole_position_points"
     t.integer "any_lap_led_points"
-    t.integer "most_lap_led_points"
+    t.integer "most_laps_led_points"
     t.integer "race_finished_points"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -71,7 +71,7 @@ ActiveRecord::Schema.define(version: 2021_11_23_223608) do
   create_table "scores", force: :cascade do |t|
     t.integer "race_result_id"
     t.integer "points_system_id"
-    t.integer "score"
+    t.integer "points"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -87,7 +87,7 @@ ActiveRecord::Schema.define(version: 2021_11_23_223608) do
 
   create_table "tracks", force: :cascade do |t|
     t.string "name"
-    t.string "type"
+    t.string "track_type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

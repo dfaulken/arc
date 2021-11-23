@@ -1,10 +1,10 @@
 c = Championship.create name: "Apollo Racing Club Open Wheel Championship"
 
-p1 = PointsSystem.create name: 'IndyCar points system, no bonus points',
+p1 = PointsSystem.create name: 'IndyCar points system, no rounds dropped, no finish points',
   worst_rounds_dropped: 0,
-  pole_position_points: 0,
-  any_lap_led_points: 0,
-  most_lap_led_points: 0,
+  pole_position_points: 1,
+  any_lap_led_points: 1,
+  most_laps_led_points: 2,
   race_finished_points: 0
 
 p1.points_allocations.create position: 1,  points: 50
@@ -25,14 +25,14 @@ p1.points_allocations.create position: 15, points: 15
 
 s1 = c.seasons.create name: 'IndyARC Season 1', index: 1, points_system: p1
 
-mich = Track.create name: 'Michigan', type: TrackType::OVAL
-lagu = Track.create name: 'Laguna Seca', type: TrackType::ROAD
-phoe = Track.create name: 'Phoenix', type: TrackType::OVAL
-ch_o = Track.create name: 'Charlotte Oval', type: TrackType::OVAL
-monz = Track.create name: 'Monza', type: TrackType::ROAD
+mich = Track.create name: 'Michigan', track_type: TrackType::OVAL
+lagu = Track.create name: 'Laguna Seca', track_type: TrackType::ROAD
+phoe = Track.create name: 'Phoenix', track_type: TrackType::OVAL
+ch_o = Track.create name: 'Charlotte Oval', track_type: TrackType::OVAL
+monz = Track.create name: 'Monza', track_type: TrackType::ROAD
 
 r1 = s1.races.create track: mich, date: Date.new(2020, 8, 30), index: 1, laps: 60
-r2 = s1.races.create track: laguna, date: Date.new(2020, 9, 6), index: 2, laps: 40
+r2 = s1.races.create track: lagu, date: Date.new(2020, 9, 6), index: 2, laps: 40
 r3 = s1.races.create track: phoe, date: Date.new(2020, 9, 13), index: 3, laps: 90
 r4 = s1.races.create track: ch_o, date: Date.new(2020, 9, 20), index: 4, laps: 40
 r5 = s1.races.create track: monz, date: Date.new(2020, 9, 27), index: 5, laps: 35
