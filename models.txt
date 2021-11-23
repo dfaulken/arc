@@ -1,12 +1,48 @@
-
 Championship
+  name
 
 Season
+  championship_id
+  points_system_id
+  index
+  name
 
 PointsSystem
+  name
+  worst_rounds_dropped
+  pole_position_points
+  lap_led_points
+  most_laps_led_points
+  race_finished_points
+  
+PointsAllocation
+  position
+  points_system_id
+  points
 
 Driver
+  name
+  nickname
 
 Race
+  season_id
+  track_id
+  date
+  index
+  laps
+  
+Track
+  name
+  type (road, oval)
 
 RaceResult
+  race_id
+  driver_id
+  scored_pole_position
+  laps_led
+  finished_race
+  
+Score
+  race_result_id
+  points_system_id
+  score
