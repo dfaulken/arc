@@ -1,0 +1,47 @@
+<%= form_with(model: points_system) do |form| %>
+  <% if points_system.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(points_system.errors.count, "error") %> prohibited this points_system from being saved:</h2>
+
+      <ul>
+        <% points_system.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :worst_rounds_dropped %>
+    <%= form.number_field :worst_rounds_dropped %>
+  </div>
+
+  <div class="field">
+    <%= form.label :pole_position_points %>
+    <%= form.number_field :pole_position_points %>
+  </div>
+
+  <div class="field">
+    <%= form.label :any_lap_led_points %>
+    <%= form.number_field :any_lap_led_points %>
+  </div>
+
+  <div class="field">
+    <%= form.label :most_lap_led_points %>
+    <%= form.number_field :most_lap_led_points %>
+  </div>
+
+  <div class="field">
+    <%= form.label :race_finished_points %>
+    <%= form.number_field :race_finished_points %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

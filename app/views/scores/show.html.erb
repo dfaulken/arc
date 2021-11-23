@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Race result:</strong>
+  <%= @score.race_result_id %>
+</p>
+
+<p>
+  <strong>Points system:</strong>
+  <%= @score.points_system_id %>
+</p>
+
+<p>
+  <strong>Score:</strong>
+  <%= @score.score %>
+</p>
+
+<%= link_to 'Edit', edit_score_path(@score) %> |
+<%= link_to 'Back', scores_path %>

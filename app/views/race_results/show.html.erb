@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Race:</strong>
+  <%= @race_result.race_id %>
+</p>
+
+<p>
+  <strong>Driver:</strong>
+  <%= @race_result.driver_id %>
+</p>
+
+<p>
+  <strong>Scored pole position:</strong>
+  <%= @race_result.scored_pole_position %>
+</p>
+
+<p>
+  <strong>Laps led:</strong>
+  <%= @race_result.laps_led %>
+</p>
+
+<p>
+  <strong>Finished race:</strong>
+  <%= @race_result.finished_race %>
+</p>
+
+<%= link_to 'Edit', edit_race_result_path(@race_result) %> |
+<%= link_to 'Back', race_results_path %>

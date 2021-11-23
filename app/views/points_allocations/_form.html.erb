@@ -1,0 +1,32 @@
+<%= form_with(model: points_allocation) do |form| %>
+  <% if points_allocation.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(points_allocation.errors.count, "error") %> prohibited this points_allocation from being saved:</h2>
+
+      <ul>
+        <% points_allocation.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :points_system_id %>
+    <%= form.number_field :points_system_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :position %>
+    <%= form.number_field :position %>
+  </div>
+
+  <div class="field">
+    <%= form.label :points %>
+    <%= form.number_field :points %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

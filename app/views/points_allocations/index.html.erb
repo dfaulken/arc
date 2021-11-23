@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Points Allocations</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Points system</th>
+      <th>Position</th>
+      <th>Points</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @points_allocations.each do |points_allocation| %>
+      <tr>
+        <td><%= points_allocation.points_system_id %></td>
+        <td><%= points_allocation.position %></td>
+        <td><%= points_allocation.points %></td>
+        <td><%= link_to 'Show', points_allocation %></td>
+        <td><%= link_to 'Edit', edit_points_allocation_path(points_allocation) %></td>
+        <td><%= link_to 'Destroy', points_allocation, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Points Allocation', new_points_allocation_path %>

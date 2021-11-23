@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @points_system.name %>
+</p>
+
+<p>
+  <strong>Worst rounds dropped:</strong>
+  <%= @points_system.worst_rounds_dropped %>
+</p>
+
+<p>
+  <strong>Pole position points:</strong>
+  <%= @points_system.pole_position_points %>
+</p>
+
+<p>
+  <strong>Any lap led points:</strong>
+  <%= @points_system.any_lap_led_points %>
+</p>
+
+<p>
+  <strong>Most lap led points:</strong>
+  <%= @points_system.most_lap_led_points %>
+</p>
+
+<p>
+  <strong>Race finished points:</strong>
+  <%= @points_system.race_finished_points %>
+</p>
+
+<%= link_to 'Edit', edit_points_system_path(@points_system) %> |
+<%= link_to 'Back', points_systems_path %>
