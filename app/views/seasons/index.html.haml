@@ -1,0 +1,22 @@
+%p#notice= notice
+%h1 Seasons
+%table
+  %thead
+    %tr
+      %th Championship
+      %th Points system
+      %th Index
+      %th Name
+      %th{:colspan => "3"}
+  %tbody
+    - @seasons.each do |season|
+      %tr
+        %td= season.championship_id
+        %td= season.points_system_id
+        %td= season.index
+        %td= season.name
+        %td= link_to 'Show', season
+        %td= link_to 'Edit', edit_season_path(season)
+        %td= link_to 'Destroy', season, method: :delete, data: { confirm: 'Are you sure?' }
+%br/
+= link_to 'New Season', new_season_path

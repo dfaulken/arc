@@ -1,0 +1,23 @@
+= form_with(model: season) do |form|
+  - if season.errors.any?
+    #error_explanation
+      %h2
+        = pluralize(season.errors.count, "error")
+        prohibited this season from being saved:
+      %ul
+        - season.errors.each do |error|
+          %li= error.full_message
+  .field
+    = form.label :championship_id
+    = form.number_field :championship_id
+  .field
+    = form.label :points_system_id
+    = form.number_field :points_system_id
+  .field
+    = form.label :index
+    = form.number_field :index
+  .field
+    = form.label :name
+    = form.text_field :name
+  .actions
+    = form.submit

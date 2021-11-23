@@ -1,0 +1,19 @@
+%p#notice= notice
+%p
+  %strong Season:
+  = @race.season_id
+%p
+  %strong Track:
+  = @race.track_id
+%p
+  %strong Date:
+  = @race.date
+%p
+  %strong Index:
+  = @race.index
+%p
+  %strong Laps:
+  = @race.laps
+= link_to 'Edit', edit_race_path(@race)
+|
+= link_to 'Back', races_path

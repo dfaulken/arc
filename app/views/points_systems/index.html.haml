@@ -1,0 +1,26 @@
+%p#notice= notice
+%h1 Points Systems
+%table
+  %thead
+    %tr
+      %th Name
+      %th Worst rounds dropped
+      %th Pole position points
+      %th Any lap led points
+      %th Most lap led points
+      %th Race finished points
+      %th{:colspan => "3"}
+  %tbody
+    - @points_systems.each do |points_system|
+      %tr
+        %td= points_system.name
+        %td= points_system.worst_rounds_dropped
+        %td= points_system.pole_position_points
+        %td= points_system.any_lap_led_points
+        %td= points_system.most_lap_led_points
+        %td= points_system.race_finished_points
+        %td= link_to 'Show', points_system
+        %td= link_to 'Edit', edit_points_system_path(points_system)
+        %td= link_to 'Destroy', points_system, method: :delete, data: { confirm: 'Are you sure?' }
+%br/
+= link_to 'New Points System', new_points_system_path

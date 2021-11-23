@@ -1,0 +1,26 @@
+= form_with(model: race_result) do |form|
+  - if race_result.errors.any?
+    #error_explanation
+      %h2
+        = pluralize(race_result.errors.count, "error")
+        prohibited this race_result from being saved:
+      %ul
+        - race_result.errors.each do |error|
+          %li= error.full_message
+  .field
+    = form.label :race_id
+    = form.number_field :race_id
+  .field
+    = form.label :driver_id
+    = form.number_field :driver_id
+  .field
+    = form.label :scored_pole_position
+    = form.check_box :scored_pole_position
+  .field
+    = form.label :laps_led
+    = form.number_field :laps_led
+  .field
+    = form.label :finished_race
+    = form.check_box :finished_race
+  .actions
+    = form.submit

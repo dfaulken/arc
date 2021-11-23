@@ -1,0 +1,20 @@
+= form_with(model: score) do |form|
+  - if score.errors.any?
+    #error_explanation
+      %h2
+        = pluralize(score.errors.count, "error")
+        prohibited this score from being saved:
+      %ul
+        - score.errors.each do |error|
+          %li= error.full_message
+  .field
+    = form.label :race_result_id
+    = form.number_field :race_result_id
+  .field
+    = form.label :points_system_id
+    = form.number_field :points_system_id
+  .field
+    = form.label :score
+    = form.number_field :score
+  .actions
+    = form.submit

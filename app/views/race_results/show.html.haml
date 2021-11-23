@@ -1,0 +1,19 @@
+%p#notice= notice
+%p
+  %strong Race:
+  = @race_result.race_id
+%p
+  %strong Driver:
+  = @race_result.driver_id
+%p
+  %strong Scored pole position:
+  = @race_result.scored_pole_position
+%p
+  %strong Laps led:
+  = @race_result.laps_led
+%p
+  %strong Finished race:
+  = @race_result.finished_race
+= link_to 'Edit', edit_race_result_path(@race_result)
+|
+= link_to 'Back', race_results_path

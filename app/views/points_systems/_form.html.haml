@@ -1,0 +1,29 @@
+= form_with(model: points_system) do |form|
+  - if points_system.errors.any?
+    #error_explanation
+      %h2
+        = pluralize(points_system.errors.count, "error")
+        prohibited this points_system from being saved:
+      %ul
+        - points_system.errors.each do |error|
+          %li= error.full_message
+  .field
+    = form.label :name
+    = form.text_field :name
+  .field
+    = form.label :worst_rounds_dropped
+    = form.number_field :worst_rounds_dropped
+  .field
+    = form.label :pole_position_points
+    = form.number_field :pole_position_points
+  .field
+    = form.label :any_lap_led_points
+    = form.number_field :any_lap_led_points
+  .field
+    = form.label :most_lap_led_points
+    = form.number_field :most_lap_led_points
+  .field
+    = form.label :race_finished_points
+    = form.number_field :race_finished_points
+  .actions
+    = form.submit

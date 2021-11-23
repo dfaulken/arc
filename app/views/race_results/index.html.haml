@@ -1,0 +1,24 @@
+%p#notice= notice
+%h1 Race Results
+%table
+  %thead
+    %tr
+      %th Race
+      %th Driver
+      %th Scored pole position
+      %th Laps led
+      %th Finished race
+      %th{:colspan => "3"}
+  %tbody
+    - @race_results.each do |race_result|
+      %tr
+        %td= race_result.race_id
+        %td= race_result.driver_id
+        %td= race_result.scored_pole_position
+        %td= race_result.laps_led
+        %td= race_result.finished_race
+        %td= link_to 'Show', race_result
+        %td= link_to 'Edit', edit_race_result_path(race_result)
+        %td= link_to 'Destroy', race_result, method: :delete, data: { confirm: 'Are you sure?' }
+%br/
+= link_to 'New Race Result', new_race_result_path

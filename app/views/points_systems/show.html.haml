@@ -1,0 +1,22 @@
+%p#notice= notice
+%p
+  %strong Name:
+  = @points_system.name
+%p
+  %strong Worst rounds dropped:
+  = @points_system.worst_rounds_dropped
+%p
+  %strong Pole position points:
+  = @points_system.pole_position_points
+%p
+  %strong Any lap led points:
+  = @points_system.any_lap_led_points
+%p
+  %strong Most lap led points:
+  = @points_system.most_lap_led_points
+%p
+  %strong Race finished points:
+  = @points_system.race_finished_points
+= link_to 'Edit', edit_points_system_path(@points_system)
+|
+= link_to 'Back', points_systems_path

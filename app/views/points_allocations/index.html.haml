@@ -1,0 +1,20 @@
+%p#notice= notice
+%h1 Points Allocations
+%table
+  %thead
+    %tr
+      %th Points system
+      %th Position
+      %th Points
+      %th{:colspan => "3"}
+  %tbody
+    - @points_allocations.each do |points_allocation|
+      %tr
+        %td= points_allocation.points_system_id
+        %td= points_allocation.position
+        %td= points_allocation.points
+        %td= link_to 'Show', points_allocation
+        %td= link_to 'Edit', edit_points_allocation_path(points_allocation)
+        %td= link_to 'Destroy', points_allocation, method: :delete, data: { confirm: 'Are you sure?' }
+%br/
+= link_to 'New Points Allocation', new_points_allocation_path

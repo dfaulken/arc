@@ -1,0 +1,13 @@
+%p#notice= notice
+%p
+  %strong Race result:
+  = @score.race_result_id
+%p
+  %strong Points system:
+  = @score.points_system_id
+%p
+  %strong Score:
+  = @score.score
+= link_to 'Edit', edit_score_path(@score)
+|
+= link_to 'Back', scores_path

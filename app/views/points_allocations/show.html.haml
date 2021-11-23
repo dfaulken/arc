@@ -1,0 +1,13 @@
+%p#notice= notice
+%p
+  %strong Points system:
+  = @points_allocation.points_system_id
+%p
+  %strong Position:
+  = @points_allocation.position
+%p
+  %strong Points:
+  = @points_allocation.points
+= link_to 'Edit', edit_points_allocation_path(@points_allocation)
+|
+= link_to 'Back', points_allocations_path
