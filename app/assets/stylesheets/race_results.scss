@@ -1,3 +1,95 @@
 // Place all the styles related to the RaceResults controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+.race-results {
+    border-collapse: collapse;
+    margin: 10px;
+    
+    thead {
+        background: lightgray;
+        th.race {
+            &.warning {
+                background: red;
+            }
+            max-width: 100px;
+            height: 75px; 
+            width: 100px;
+            .race-date {
+                font-size: 10px;
+                height: 15px;
+            }
+            .race-track-name {
+                height: 60px;
+                line-height: 60px;
+                .track-name {
+                    display: inline-block;
+                    line-height: normal;
+                    vertical-align: middle;
+                }
+            }
+        }
+    }
+    tbody tr {
+        height: 40px;
+    }
+    th,td {
+        border: 1px solid gray;
+        padding: 3px;
+        text-align: center;
+        vertical-align: middle;
+        &.empty {
+            background: white;
+            border: none;
+        }
+    }
+
+    td.driver-name.championship-contender {
+        background: #fff2cc;
+    }
+
+    td.result {
+        font-family: arial;
+        font-size: 24px;
+
+        &.p1 {
+            background: #ffe599;
+        }
+        &.p2 {
+            background: #ccc;
+        }
+        &.p3 {
+            background: #f9cb9c;
+        }
+        &.p4-p10 {
+            background: #d9ead3;
+        }
+        &.below-p10 {
+            background: #d9d2e9;
+        }
+
+        &.pole {
+            font-weight: bold;
+        }
+        &.led-lap {
+            font-style: italic;
+        }
+        &.most-laps-led { 
+            text-decoration: underline;
+        }
+        &.non-finisher {
+            color: red;
+        }
+    }
+
+    td.score {
+        font-size: 10px;
+        padding: 0;
+        &.dropped a{
+            color: red;
+        }
+    }
+
+    td.points {
+        font-size: 20px;
+    }
+}

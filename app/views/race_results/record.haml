@@ -1,0 +1,31 @@
+- title 'Recording Race Results'
+%p#notice= notice
+%h1 Recording Results for #{@race.name}
+
+= form_tag record_race_results_path, local: false do
+  = hidden_field_tag :race, @race.id
+  %table
+    - @results.each do |result|
+      %tr
+        = fields_for 'results[]', result do |result_form|
+          =result_form.hidden_field :race_id, value: @race.id
+          %td
+            = result_form.label :position
+            = result_form.number_field :position, readonly: true
+          %td
+            = result_form.label :driver_id
+            = result_form.select :driver_id, options_from_collection_for_select(Driver.all, :id, :name), include_blank: true, required: true
+          %td
+            = result_form.label :scored_pole_position
+            = check_box_tag 'results[][scored_pole_position]', true, result.scored_pole_position?
+          %td
+            = result_form.label :laps_led
+            = result_form.number_field :laps_led, required: true, value: 0
+          %td
+            = result_form.label :finished_race
+            = check_box_tag 'results[][finished_race]', true, result.finished_race?
+          %td
+            %ul
+              - result.errors.full_messages.each do |message|
+                %li= message
+  = submit_tag 'Record Race Results'

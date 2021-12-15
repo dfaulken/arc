@@ -1,3 +1,4 @@
+- title @driver.name
 %p#notice= notice
 %p
   %strong Name:
@@ -5,6 +6,16 @@
 %p
   %strong Nickname:
   = @driver.nickname
-= link_to 'Edit', edit_driver_path(@driver)
-|
-= link_to 'Back', drivers_path
+%h2 Championship Results
+- @results.each_pair do |championship, championship_data|
+  %h2= link_to championship.name, seasons_path(championship: championship)
+  - seasons = championship_data[:seasons]
+  - table_width = championship_data[:table_width]
+  - seasons.each_pair do |season, season_results|
+    %h3
+      = link_to season.name, races_path(season: season)
+      - if season.ongoing?
+        (ongoing)
+    = render 'race_results_table', season: season, results: season_results, table_width: table_width
+- if mod_signed_in?
+  = link_to 'Edit', edit_driver_path(@driver)

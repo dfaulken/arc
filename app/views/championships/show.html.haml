@@ -2,6 +2,8 @@
 %p
   %strong Name:
   = @championship.name
+.links
+  =link_to 'Seasons', seasons_path(championship: @championship)
 = link_to 'Edit', edit_championship_path(@championship)
 |
 = link_to 'Back', championships_path

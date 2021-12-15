@@ -1,19 +1,16 @@
+- title @race.name
 %p#notice= notice
 %p
   %strong Season:
-  = @race.season_id
+  = @race.season.name
 %p
   %strong Track:
-  = @race.track_id
+  = @race.track.name
 %p
   %strong Date:
   = @race.date
 %p
-  %strong Index:
-  = @race.index
-%p
   %strong Laps:
   = @race.laps
-= link_to 'Edit', edit_race_path(@race)
-|
-= link_to 'Back', races_path
+- if mod_signed_in?
+  = link_to 'Edit', edit_race_path(@race, season: @season)

@@ -1,0 +1,39 @@
+%table.race-results
+  %thead
+    %tr
+      %th.empty
+      %th Driver
+      - @races.each do |race|
+        %th.race{colspan: 2, class: ('warning' if race.warnings.any?)}
+          .race-date= link_to race.date, race
+          .race-track-name
+            .track-name= link_to race.track.name, race_results_path(race: race)
+      - if @season.points_system.drops_rounds?
+        %th 
+          Base
+          %br
+          points
+        %th
+          Dropped
+          %br
+          points
+      %th Total points
+  %tbody
+    - @drivers.each do |driver|
+      %tr
+        - standing = @standings[driver]
+        %td= standing.position
+        %td.driver-name{class: ('championship-contender' if driver.in_championship_contention?(season: @season))}= link_to driver.numbered_name_with_nickname, driver
+        - @races.each do |race|
+          - result = @results[driver][race]
+          - if result
+            %td.result{class: race_result_classes(result)}= result.position
+            - score = @scores[driver][race]
+            %td.score{class: ('dropped' if standing.drops? result)}= link_to score.points, result
+          - else
+            %td
+            %td
+        - if @season.points_system.drops_rounds?
+          %td= standing.base_points
+          %td= standing.dropped_points
+        %td.points= standing.points

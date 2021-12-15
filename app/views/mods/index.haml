@@ -1,0 +1,18 @@
+- title 'Mods'
+%p#notice= notice
+%h1 Mods
+%table
+  %thead
+    %tr
+      %th Email
+      %th Approved?
+      %th{colspan: 2}
+  %tbody
+    - @mods.each do |mod|
+      %tr
+        %td= mod.email
+        %td= mod.approved?
+        %td
+          - unless mod.approved?
+            = button_to 'Approve', approve_mod_path(mod)
+        %td= button_to 'Delete', mod, method: :delete, data: { confirm: 'Are you sure?' }

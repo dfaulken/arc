@@ -1,5 +1,6 @@
 class PointsSystemsController < ApplicationController
   before_action :set_points_system, only: %i[ show edit update destroy ]
+  before_action :authenticate_mod!, except: %i[ index show ]
 
   # GET /points_systems or /points_systems.json
   def index
@@ -17,6 +18,11 @@ class PointsSystemsController < ApplicationController
 
   # GET /points_systems/1/edit
   def edit
+    if params[:build_new_points_allocation]
+      @points_system.points_allocations.build(
+        position: params.require(:new_points_allocation_position).to_i
+      )
+    end
   end
 
   # POST /points_systems or /points_systems.json
@@ -38,6 +44,10 @@ class PointsSystemsController < ApplicationController
   def update
     respond_to do |format|
       if @points_system.update(points_system_params)
+        @points_system.seasons.each do |season|
+          season.calculate_scores!
+          season.calculate_standings!
+        end
         format.html { redirect_to @points_system, notice: "Points system was successfully updated." }
         format.json { render :show, status: :ok, location: @points_system }
       else
@@ -64,6 +74,8 @@ class PointsSystemsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def points_system_params
-      params.require(:points_system).permit(:name, :worst_rounds_dropped, :pole_position_points, :any_lap_led_points, :most_lap_led_points, :race_finished_points)
+      params.require(:points_system).permit(:name, :worst_rounds_dropped, 
+        :pole_position_points, :any_lap_led_points, :most_laps_led_points, :race_finished_points,
+        points_allocations_attributes: %i[ id position points ])
     end
 end

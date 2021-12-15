@@ -7,15 +7,13 @@
       %ul
         - season.errors.each do |error|
           %li= error.full_message
-  .field
-    = form.label :championship_id
-    = form.number_field :championship_id
-  .field
-    = form.label :points_system_id
-    = form.number_field :points_system_id
+  = form.hidden_field :championship_id, value: @championship.id
   .field
     = form.label :index
-    = form.number_field :index
+    = form.number_field :index, value: season.persisted? ? season.index : @championship.seasons.pluck(:index).max.succ
+  .field
+    = form.label :points_system
+    = form.select :points_system_id, options_from_collection_for_select(PointsSystem.all, :id, :name, season.points_system_id)
   .field
     = form.label :name
     = form.text_field :name

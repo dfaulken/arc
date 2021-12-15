@@ -1,16 +1,27 @@
+- title 'Drivers'
 %p#notice= notice
 %h1 Drivers
+= link_to 'Numbers', numbers_drivers_path
 %table
   %thead
     %tr
       %th Name
       %th Nickname
+      %th Car Number
+      %th Races
+      %th Last season raced
       %th{:colspan => "3"}
   %tbody
     - @drivers.each do |driver|
       %tr
         %td= driver.name
         %td= driver.nickname
+        %td= driver.car_number
+        %td= driver.races.count
+        %td
+          - if driver.races.any?
+            - season = driver.races.last.season
+            = link_to season.name, races_path(season: season)
         %td= link_to 'Show', driver
         %td= link_to 'Edit', edit_driver_path(driver)
         %td= link_to 'Destroy', driver, method: :delete, data: { confirm: 'Are you sure?' }

@@ -1,5 +1,6 @@
 class PointsAllocationsController < ApplicationController
   before_action :set_points_allocation, only: %i[ show edit update destroy ]
+  before_action :authenticate_mod!
 
   # GET /points_allocations or /points_allocations.json
   def index

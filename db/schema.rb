@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_23_233041) do
+ActiveRecord::Schema.define(version: 2021_12_15_221421) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,6 +26,32 @@ ActiveRecord::Schema.define(version: 2021_11_23_233041) do
     t.string "nickname"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "car_number"
+  end
+
+  create_table "dropped_races", force: :cascade do |t|
+    t.integer "race_result_id"
+    t.integer "season_standing_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "mods", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "confirmation_token"
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.string "unconfirmed_email"
+    t.boolean "approved"
+    t.index ["confirmation_token"], name: "index_mods_on_confirmation_token", unique: true
+    t.index ["email"], name: "index_mods_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_mods_on_reset_password_token", unique: true
   end
 
   create_table "points_allocations", force: :cascade do |t|
@@ -56,13 +82,13 @@ ActiveRecord::Schema.define(version: 2021_11_23_233041) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "position"
+    t.boolean "most_laps_led"
   end
 
   create_table "races", force: :cascade do |t|
     t.integer "season_id"
     t.integer "track_id"
     t.date "date"
-    t.integer "index"
     t.integer "laps"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -74,6 +100,18 @@ ActiveRecord::Schema.define(version: 2021_11_23_233041) do
     t.integer "points"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "season_standings", force: :cascade do |t|
+    t.integer "season_id"
+    t.integer "driver_id"
+    t.integer "points"
+    t.integer "position"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "dropped_points"
+    t.integer "base_points"
+    t.string "track_type"
   end
 
   create_table "seasons", force: :cascade do |t|

@@ -8,11 +8,8 @@
         - race_result.errors.each do |error|
           %li= error.full_message
   .field
-    = form.label :race_id
-    = form.number_field :race_id
-  .field
     = form.label :driver_id
-    = form.number_field :driver_id
+    = form.select :driver_id, options_from_collection_for_select(Driver.all, :id, :name, race_result.driver_id)
   .field
     = form.label :scored_pole_position
     = form.check_box :scored_pole_position

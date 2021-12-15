@@ -1,24 +1,29 @@
+- title @season.name
 %p#notice= notice
-%h1 Races
-%table
-  %thead
-    %tr
-      %th Season
-      %th Track
-      %th Date
-      %th Index
-      %th Laps
-      %th{:colspan => "3"}
-  %tbody
-    - @races.each do |race|
-      %tr
-        %td= race.season_id
-        %td= race.track_id
-        %td= race.date
-        %td= race.index
-        %td= race.laps
-        %td= link_to 'Show', race
-        %td= link_to 'Edit', edit_race_path(race)
-        %td= link_to 'Destroy', race, method: :delete, data: { confirm: 'Are you sure?' }
+%h1= @season.name
+Points system:
+= link_to @season.points_system.name, @season.points_system
+%br
+- if @season.championship.combined?
+  - @season.championship.track_types.each do |track_type|
+    = link_to "View #{track_type} standings", races_path(season: @season, track_type: track_type)
+    %br
+  - if @track_type
+    = link_to "View all standings", races_path(season: @season)
+- if @season.races.any?
+  = render partial: 'seasons/race_results_table'
+  %h2 Points Progression
+  Drivers who have been in the top 5 of the standings at any point are shown by default.
+  %br
+  Click on the driver names above the chart to show any others.
+  %br
+  %canvas#points_progression
+- if @season.standings.any? && mod_signed_in?
+  = button_to 'Recalculate standings', recalculate_all_season_path(@season, track_type: @track_type)
 %br/
-= link_to 'New Race', new_race_path
+- if mod_signed_in?
+  = link_to 'New Race', new_race_path(season: @season)
+  %br
+= link_to "Back to #{@season.championship.name}", seasons_path(championship: @season.championship)
+#points_progression_labels= @races.map(&:track).map(&:name).to_json
+#points_progression_data= @points_progression.to_json

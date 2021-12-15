@@ -7,18 +7,14 @@
       %ul
         - race.errors.each do |error|
           %li= error.full_message
+  = form.hidden_field :season_id, value: @season.id
+  = form.hidden_field :index, value: @season.races.count.succ
   .field
-    = form.label :season_id
-    = form.number_field :season_id
-  .field
-    = form.label :track_id
-    = form.number_field :track_id
+    = form.label :track
+    = form.select :track_id, options_from_collection_for_select(Track.all, :id, :name, race.track_id)
   .field
     = form.label :date
     = form.date_select :date
-  .field
-    = form.label :index
-    = form.number_field :index
   .field
     = form.label :laps
     = form.number_field :laps

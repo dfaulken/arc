@@ -1,0 +1,39 @@
+- title 'Driver Numbers'
+%h1 Driver Numbers
+%h2 Free Numbers Below 100
+%table
+  %tbody
+    - 0.upto(9).each do |tens_digit|
+      %tr
+        - 0.upto(9).each do |ones_digit|
+          %td
+            - n = tens_digit * 10 + ones_digit
+            - if @free.include? n
+              = n
+%h2 All Numbers
+%table
+  %thead
+    %tr
+      %th Number
+      %th Driver
+      %th Last Season Raced
+  %tbody
+    - @drivers.each do |driver|
+      %tr
+        %td= driver.car_number
+        %td= link_to driver.name, driver
+        %td= driver.last_season_raced.try(:name)
+
+%h2 Numbers by Last Season Raced
+- @by_season.each_pair do |season, drivers|
+  %h3= season.try(:name) || 'Never Raced'
+  %table
+    %thead
+      %tr
+        %th Number
+        %th Driver
+    %tbody
+      - drivers.each do |driver|
+        %tr
+          %td= driver.car_number
+          %td= link_to driver.name, driver

@@ -3,23 +3,35 @@ class RaceResult < ApplicationRecord
   belongs_to :driver
   has_many :scores
 
+  default_scope { order :position }
+
+  scope :of_type, -> (track_type) { joins(race: :track).where(tracks: { track_type: track_type }) }
+
+  validates :driver, uniqueness: { scope: :race }
   validates :scored_pole_position, inclusion: { in: [true, false] }
   validates :laps_led, presence: true
   validates :finished_race, inclusion: { in: [true, false] }
   validates :position, presence: true
+  validates :most_laps_led, inclusion: { in: [true, false] }
+
+  after_create -> { calculate_and_persist_score! }
+  after_update -> { scores.each(&:calculate!) && scores.each(&:save) && race.season.calculate_standings! }
 
   def calculate_and_persist_score!
     new_score = scores.build points_system: default_points_system
     new_score.calculate!
-    new_score.save
+    new_score.save!
   end
 
   def default_points_system
     race.season.points_system
   end
 
-  def most_laps_led?
-    laps_led == race.results.pluck(:laps_led).max
+  def earned_bonus_points?(points_system)
+    (points_system.pole_position_points > 0 && scored_pole_position?) ||
+    (points_system.any_lap_led_points > 0 && laps_led > 0) ||
+    (points_system.most_laps_led_points > 0 && most_laps_led?) ||
+    (points_system.race_finished_points > 0 && finished_race?)
   end
 
   def score

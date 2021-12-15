@@ -11,7 +11,7 @@
     = form.label :name
     = form.text_field :name
   .field
-    = form.label :type
-    = form.text_field :type
+    = form.label :track_type
+    = form.select :track_type, options_for_select(TrackType.types)
   .actions
     = form.submit

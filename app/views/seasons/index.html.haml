@@ -1,22 +1,43 @@
+- title @championship.name
 %p#notice= notice
-%h1 Seasons
+%h1 #{@championship.name} Seasons
 %table
   %thead
     %tr
-      %th Championship
-      %th Points system
-      %th Index
       %th Name
-      %th{:colspan => "3"}
+      %th Points system
+      - if mod_signed_in?
+        %th{:colspan => "2"}
   %tbody
     - @seasons.each do |season|
       %tr
-        %td= season.championship_id
-        %td= season.points_system_id
-        %td= season.index
-        %td= season.name
-        %td= link_to 'Show', season
-        %td= link_to 'Edit', edit_season_path(season)
-        %td= link_to 'Destroy', season, method: :delete, data: { confirm: 'Are you sure?' }
+        %td= link_to season.name, races_path(season: season)
+        %td= link_to season.points_system.name, season.points_system
+        - if mod_signed_in?
+          %td= link_to 'Edit', edit_season_path(season)
+          %td= link_to 'Destroy', season, method: :delete, data: { confirm: 'Are you sure?' }
+%h2 Championship Statistics
+- @statistics.each_pair do |track_type, statistics|
+  %h3
+    = track_type.capitalize
+    (#{statistics[:count]} races, #{statistics[:lap_count]} laps)
+  %span.statistics
+    .stat
+      Wins
+      = render 'championships/driver_stat_table', statistic: statistics[:wins]
+    .stat
+      Pole positions
+      = render 'championships/driver_stat_table', statistic: statistics[:pole_positions]
+    .stat
+      Races with most laps led
+      = render 'championships/driver_stat_table', statistic: statistics[:most_laps_led]
+    .stat
+      Top 10: Laps led
+      = render 'championships/driver_stat_table', statistic: statistics[:laps_led]
+    .stat
+      Top 10: Average finishing position (at least 5 races finished)
+      = render 'championships/driver_stat_table', statistic: statistics[:average_finishing_position]  
+
 %br/
-= link_to 'New Season', new_season_path
+- if mod_signed_in?
+  = link_to 'New Season', new_season_path(championship: @championship)

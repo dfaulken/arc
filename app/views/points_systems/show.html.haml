@@ -1,3 +1,4 @@
+- title @points_system.name
 %p#notice= notice
 %p
   %strong Name:
@@ -12,11 +13,14 @@
   %strong Any lap led points:
   = @points_system.any_lap_led_points
 %p
-  %strong Most lap led points:
-  = @points_system.most_lap_led_points
+  %strong Most laps led points:
+  = @points_system.most_laps_led_points
 %p
   %strong Race finished points:
   = @points_system.race_finished_points
-= link_to 'Edit', edit_points_system_path(@points_system)
-|
-= link_to 'Back', points_systems_path
+
+%ul
+  - @points_system.points_allocations.each do |allocation|
+    %li Position #{allocation.position}: #{allocation.points} points
+- if mod_signed_in?
+  = link_to 'Edit', edit_points_system_path(@points_system)

@@ -1,10 +1,14 @@
+- title 'Race Result'
 %p#notice= notice
 %p
   %strong Race:
-  = @race_result.race_id
+  = @race_result.race.name
 %p
   %strong Driver:
-  = @race_result.driver_id
+  = @race_result.driver.name
+%p
+  %strong Position:
+  = @race_result.position
 %p
   %strong Scored pole position:
   = @race_result.scored_pole_position
@@ -12,8 +16,43 @@
   %strong Laps led:
   = @race_result.laps_led
 %p
+  %strong Led most laps?
+  = @race_result.most_laps_led?
+%p
   %strong Finished race:
   = @race_result.finished_race
-= link_to 'Edit', edit_race_result_path(@race_result)
+- @race_result.scores.each do |score|
+  %h3 Points Breakdown (#{score.points_system.name})
+  %ul
+    %li
+      %strong Base points for finishing position:
+      = score.points_system.points_for @race_result.position
+    %li
+      %strong Bonus points:
+      - if @race_result.earned_bonus_points? score.points_system
+        %ul
+          - if @race_result.scored_pole_position?
+            %li
+              %strong Pole position:
+              = score.points_system.pole_position_points
+          - if @race_result.laps_led > 0
+            %li
+              %strong Any lap led:
+              = score.points_system.any_lap_led_points
+          - if @race_result.most_laps_led?
+            %li
+              %strong Most laps led:
+              = score.points_system.most_laps_led_points
+          - if @race_result.finished_race?
+            %li
+              %strong Finished race:
+              = score.points_system.race_finished_points
+      - else
+        none
+    %li
+      %strong Total points:
+      = score.points
+
+= link_to 'Edit', edit_race_result_path(@race_result, race: @race_result.race)
 |
 = link_to 'Back', race_results_path

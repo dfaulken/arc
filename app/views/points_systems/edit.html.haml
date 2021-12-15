@@ -1,5 +1,12 @@
+- title "Editing #{@points_system.name}"
 %h1 Editing Points System
 = render 'form', points_system: @points_system
+
+
+= form_with url: edit_points_system_path(@points_system), method: :get do |form|
+  = form.hidden_field :build_new_points_allocation, value: true
+  = form.hidden_field :new_points_allocation_position, value: @points_system.points_allocations.pluck(:position).max.try(:succ) || 1
+  = form.submit 'Add new points allocation'
 = link_to 'Show', @points_system
 |
 = link_to 'Back', points_systems_path

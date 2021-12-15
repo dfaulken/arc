@@ -109,3 +109,4 @@ r5.results.create driver: atho, position: 8, laps_led: 0, scored_pole_position: 
 r5.results.create driver: agor, position: 9, laps_led: 0, scored_pole_position: false, finished_race: false
 
 RaceResult.all.each(&:calculate_and_persist_score!)
+Season.all.each(&:calculate_standings!)

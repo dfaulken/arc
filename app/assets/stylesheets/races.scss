@@ -1,3 +1,10 @@
 // Place all the styles related to the Races controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+#points_progression{
+    max-height: 1000px;
+    max-width: 1500px;
+}
+#points_progression_data,#points_progression_labels{
+    display: none;
+}

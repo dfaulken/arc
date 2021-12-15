@@ -1,13 +1,10 @@
 class TracksController < ApplicationController
   before_action :set_track, only: %i[ show edit update destroy ]
+  before_action :authenticate_mod!
 
   # GET /tracks or /tracks.json
   def index
     @tracks = Track.all
-  end
-
-  # GET /tracks/1 or /tracks/1.json
-  def show
   end
 
   # GET /tracks/new
@@ -25,7 +22,7 @@ class TracksController < ApplicationController
 
     respond_to do |format|
       if @track.save
-        format.html { redirect_to @track, notice: "Track was successfully created." }
+        format.html { redirect_to tracks_path, notice: "Track was successfully created." }
         format.json { render :show, status: :created, location: @track }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -38,7 +35,7 @@ class TracksController < ApplicationController
   def update
     respond_to do |format|
       if @track.update(track_params)
-        format.html { redirect_to @track, notice: "Track was successfully updated." }
+        format.html { redirect_to @tracks_path, notice: "Track was successfully updated." }
         format.json { render :show, status: :ok, location: @track }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -64,6 +61,6 @@ class TracksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def track_params
-      params.require(:track).permit(:name, :type)
+      params.require(:track).permit(:name, :track_type)
     end
 end

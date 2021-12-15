@@ -1,0 +1,10 @@
+%table
+  %tbody
+    - statistic.each do |(driver, count)|
+      %tr
+        %td= link_to driver.name, driver
+        %td
+          - if count.is_a? Integer
+            = count
+          - else
+            = count.round(2)

@@ -1,5 +1,6 @@
 class ChampionshipsController < ApplicationController
   before_action :set_championship, only: %i[ show edit update destroy ]
+  before_action :authenticate_mod!, except: %i[ index show ]
 
   # GET /championships or /championships.json
   def index

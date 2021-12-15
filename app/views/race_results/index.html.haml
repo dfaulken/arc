@@ -1,24 +1,40 @@
+- title @race.name
 %p#notice= notice
-%h1 Race Results
-%table
-  %thead
-    %tr
-      %th Race
-      %th Driver
-      %th Scored pole position
-      %th Laps led
-      %th Finished race
-      %th{:colspan => "3"}
-  %tbody
-    - @race_results.each do |race_result|
+%h1 Race Results for #{@race.name}
+
+- if @race_results.none?
+  = form_with url: record_race_results_path, method: :get do |form|
+    = form.hidden_field :race, value: @race.id
+    = form.label :entrant_count, 'How many entrants did the race have?'
+    = form.number_field :entrant_count, required: true
+    = form.submit 'Record Race Results'
+- else
+  %table
+    %thead
       %tr
-        %td= race_result.race_id
-        %td= race_result.driver_id
-        %td= race_result.scored_pole_position
-        %td= race_result.laps_led
-        %td= race_result.finished_race
-        %td= link_to 'Show', race_result
-        %td= link_to 'Edit', edit_race_result_path(race_result)
-        %td= link_to 'Destroy', race_result, method: :delete, data: { confirm: 'Are you sure?' }
-%br/
-= link_to 'New Race Result', new_race_result_path
+        %th Position
+        %th Driver
+        %th Scored pole position
+        %th Laps led
+        %th Most laps led?
+        %th Finished race
+        %th Points
+    %tbody
+      - @race_results.each do |race_result|
+        %tr
+          %td= race_result.position
+          %td= race_result.driver.name
+          %td= race_result.scored_pole_position? ? 'Yes' : ''
+          %td= race_result.laps_led
+          %td= race_result.most_laps_led? ? 'Yes' : ''
+          %td= race_result.finished_race
+          %td
+            - if race_result.scores.one?
+              = race_result.scores.first.points
+            - else
+              %ul
+                - race_result.scores.each do |score|
+                  %li #{score.points} (#{score.points_system.name})
+  = link_to 'Back to season', races_path(season: @race.season)
+  - if mod_signed_in?
+    = button_to 'Delete all race results', delete_all_race_results_path(race: @race)
