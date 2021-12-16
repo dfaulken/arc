@@ -65,6 +65,6 @@ class ChampionshipsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def championship_params
-      params.require(:championship).permit(:name)
+      params.require(:championship).permit(:name, :warnings_convert_to_penalty_points, :number_of_warnings_per_penalty_point)
     end
 end

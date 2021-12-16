@@ -2,6 +2,13 @@
 %p
   %strong Name:
   = @championship.name
+%p
+  %strong Warnings convert to penalty points?
+  = @championship.warnings_convert_to_penalty_points? ? 'Yes' : 'No'
+%p
+  %strong Number of warnings per penalty point:
+  = @championship.number_of_warnings_per_penalty_point
+
 .links
   =link_to 'Seasons', seasons_path(championship: @championship)
 = link_to 'Edit', edit_championship_path(@championship)

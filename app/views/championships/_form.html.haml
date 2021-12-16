@@ -10,5 +10,11 @@
   .field
     = form.label :name
     = form.text_field :name
+  .field
+    = form.label :warnings_convert_to_penalty_points?
+    = form.check_box :warnings_convert_to_penalty_points
+  .field
+    = form.label :number_of_warnings_per_penalty_point
+    = form.number_field :number_of_warnings_per_penalty_point, min: 2
   .actions
     = form.submit

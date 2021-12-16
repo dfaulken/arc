@@ -25,7 +25,7 @@ class IncidentsController < ApplicationController
   # POST /incidents or /incidents.json
   def create
     @incident = Incident.new(incident_params)
-
+    @race = @incident.race
     respond_to do |format|
       if @incident.save
         format.html { redirect_to race_results_path(race: @incident.race), notice: "Incident was successfully created." }
