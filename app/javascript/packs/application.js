@@ -111,7 +111,6 @@ function generateColorSpectrumForDrivers(driverNames, firstPassDrivers) {
       var hue = hues[hueIndex];
       var driverName = firstPassDrivers[i];
       colorStrings[driverName] = "hsl(" + Math.round(hue) + ", 75%, 50%)";
-      debugger;
       hues.splice(hueIndex, 1);
       remainingDriverNames.splice(remainingDriverNames.indexOf(driverName), 1);
     }

@@ -7,7 +7,10 @@
         %th.race{colspan: 2, class: ('warning' if race.warnings.any?)}
           .race-date= link_to race.date, race
           .race-track-name
-            .track-name= link_to race.track.name, race_results_path(race: race)
+            .track-name
+              = link_to race.track.name, race_results_path(race: race)
+              - if mod_signed_in? && race.results.none?
+                .record-results= link_to '(record results)', race_results_path(race: race)
       - if @season.points_system.drops_rounds?
         %th 
           Base
