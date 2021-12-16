@@ -20,14 +20,13 @@ class Driver < ApplicationRecord
   end
 
   def current_championship_outcomes(championship)
-    incident_outcomes.joins(incident: { race: :season })
+    incident_outcomes.published.joins(incident: { race: :season })
        .where(seasons: { championship_id: championship.id })
        .where('expires_at > ?', DateTime.now)
-       .uniq
   end
 
   def current_warnings(championship)
-    championship_warnings = current_championship_outcomes(championship).where(received_warning: true).count
+    championship_warnings = current_championship_outcomes(championship).where(received_warning: true).uniq.count
     if championship.warnings_convert_to_penalty_points?
       championship_warnings = championship_warnings % championship.number_of_warnings_per_penalty_point
     end
@@ -35,9 +34,9 @@ class Driver < ApplicationRecord
   end
 
   def current_penalty_points(championship)
-    championship_penalty_points = current_championship_outcomes(championship).pluck(:penalty_points).inject(:+)
+    championship_penalty_points = current_championship_outcomes(championship).pluck(:penalty_points).inject(:+) || 0
     if championship.warnings_convert_to_penalty_points?
-      championship_warnings = current_championship_outcomes(championship).where(received_warning: true).count
+      championship_warnings = current_championship_outcomes(championship).where(received_warning: true).uniq.count
       championship_penalty_points += championship_warnings / championship.number_of_warnings_per_penalty_point
     end
     championship_penalty_points

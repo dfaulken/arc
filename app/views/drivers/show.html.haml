@@ -11,11 +11,19 @@
   %h2= link_to championship.name, seasons_path(championship: championship)
   - seasons = championship_data[:seasons]
   - table_width = championship_data[:table_width]
+  %b Currently active warnings:
+  = @driver.current_warnings(championship)
+  %br
+  %b Currently active penalty points:
+  = @driver.current_penalty_points(championship)
   - seasons.each_pair do |season, season_results|
     %h3
       = link_to season.name, races_path(season: season)
       - if season.ongoing?
         (ongoing)
     = render 'race_results_table', season: season, results: season_results, table_width: table_width
+- if @incidents.any?
+  %h2 Incidents
+  = render 'incidents/table'
 - if mod_signed_in?
   = link_to 'Edit', edit_driver_path(@driver)

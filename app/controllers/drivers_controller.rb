@@ -10,6 +10,7 @@ class DriversController < ApplicationController
   # GET /drivers/1 or /drivers/1.json
   def show
     construct_driver_results
+    @incidents = @driver.incidents
   end
 
   # GET /drivers/new
