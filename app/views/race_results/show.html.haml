@@ -52,7 +52,5 @@
     %li
       %strong Total points:
       = score.points
-
-= link_to 'Edit', edit_race_result_path(@race_result, race: @race_result.race)
-|
-= link_to 'Back', race_results_path
+- if mod_signed_in?
+  = link_to 'Edit', edit_race_result_path(@race_result, race: @race_result.race)
