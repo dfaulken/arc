@@ -20,9 +20,8 @@ class Driver < ApplicationRecord
   end
 
   def current_championship_outcomes(championship)
-    incident_outcomes.published.joins(incident: { race: :season })
+    incident_outcomes.active.published.joins(incident: { race: :season })
        .where(seasons: { championship_id: championship.id })
-       .where('expires_at > ?', DateTime.now)
   end
 
   def current_warnings(championship)

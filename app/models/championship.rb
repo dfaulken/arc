@@ -1,6 +1,8 @@
 class Championship < ApplicationRecord
   has_many :seasons
   has_many :races, through: :seasons
+  has_many :incidents, through: :races
+  has_many :outcomes, through: :incidents
   has_many :tracks, through: :races
   has_many :results, through: :seasons
 
@@ -9,6 +11,10 @@ class Championship < ApplicationRecord
 
   def combined?
     track_types.count > 1
+  end
+
+  def drivers_with_active_published_incident_outcomes
+    Driver.find(outcomes.active.published.pluck(:driver_id))
   end
 
   def finishes(track_type:)

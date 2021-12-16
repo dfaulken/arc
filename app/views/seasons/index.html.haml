@@ -37,7 +37,20 @@
     .stat
       Top 10: Average finishing position (at least 5 races finished)
       = render 'championships/driver_stat_table', statistic: statistics[:average_finishing_position]  
-
+- if @incident_drivers.any?
+  %h2 Drivers with Active Incident Outcomes
+  %table
+    %thead 
+      %tr
+        %th Driver
+        %th Active warnings
+        %th Active penalty points
+    %tbody
+      - @incident_drivers.each do |driver|
+        %tr
+          %td= link_to driver.name, driver
+          %td= driver.current_warnings(@championship)
+          %td= driver.current_penalty_points(@championship)
 %br/
 - if mod_signed_in?
   = link_to 'New Season', new_season_path(championship: @championship)

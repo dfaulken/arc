@@ -7,6 +7,7 @@ class SeasonsController < ApplicationController
   def index
     @seasons = @championship.seasons
     construct_championship_statistics
+    @incident_drivers = @championship.drivers_with_active_published_incident_outcomes
   end
 
   # GET /seasons/new
