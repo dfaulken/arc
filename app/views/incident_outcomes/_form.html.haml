@@ -8,22 +8,24 @@
 
   .field
     = f.label :incident_id
-    = f.number_field :incident_id
+    = f.select :incident_id, options_from_collection_for_select(@incident.race.incidents, :id, :name, @incident.id), readonly: true
   .field
     = f.label :driver_id
-    = f.number_field :driver_id
+    = f.select :driver_id, options_from_collection_for_select(@incident.race.drivers, :id, :name)
   .field
     = f.label :received_warning
     = f.check_box :received_warning
   .field
     = f.label :penalty_points
-    = f.number_field :penalty_points
+    = f.number_field :penalty_points, required: true, min: 0
   .field
     = f.label :expires_at
-    = f.datetime_select :expires_at
+    %em This defaults to the day after the last race of the season.
+    %br
+    = f.datetime_select :expires_at, default: @incident.race.season.finish_date
   .field
     = f.label :explanation
-    = f.text_area :explanation
+    = f.text_area :explanation, size: '75x20'
   .field
     = f.label :published
     = f.check_box :published

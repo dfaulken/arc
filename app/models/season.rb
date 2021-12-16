@@ -35,6 +35,10 @@ class Season < ApplicationRecord
     calculate_standings_for! TrackType.any
   end
 
+  def finish_date
+    races.last.date + 1.day
+  end
+
   def grouped_results(track_type = TrackType.any)
     groups = results.of_type(track_type).group_by(&:driver)
     grouped = {}
@@ -77,12 +81,6 @@ class Season < ApplicationRecord
     grouped
   end
 
-  def ongoing?
-    races.any? do |race|
-      race.results.none?
-    end
-  end
-
   def grouped_points_progression(track_type = TrackType.any)
     grouped = {}
     track_type_races = races.select do |race|
@@ -104,6 +102,12 @@ class Season < ApplicationRecord
       grouped[driver.name] = points_progression
     end
     grouped
+  end
+
+  def ongoing?
+    races.any? do |race|
+      race.results.none?
+    end
   end
 
   def scores_to_drop(track_type)

@@ -1,5 +1,5 @@
 class RacesController < ApplicationController
-  before_action :set_race, only: %i[ show edit update destroy ]
+  before_action :set_race, only: %i[ show edit update destroy publish_incident_outcomes ]
   before_action :set_season, only: %i[index new ]
   before_action :authenticate_mod!, except: %i[ index show ]
 
@@ -47,6 +47,11 @@ class RacesController < ApplicationController
         format.json { render json: @race.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def publish_incident_outcomes
+    @race.publish_incident_outcomes!
+    redirect_to race_results_path(race: @race), notice: 'Incident outcomes published.'
   end
 
   # PATCH/PUT /races/1 or /races/1.json

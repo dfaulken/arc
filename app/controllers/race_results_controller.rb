@@ -11,6 +11,7 @@ class RaceResultsController < ApplicationController
   # GET /race_results or /race_results.json
   def index
     @race_results = @race.results
+    @incidents = @race.incidents
     authenticate_mod! if @race_results.none?
   end
 

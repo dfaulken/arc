@@ -24,7 +24,11 @@ Rails.application.routes.draw do
       post :delete_all
     end
   end
-  resources :races
+  resources :races do
+    member do
+      post :publish_incident_outcomes
+    end
+  end
   resources :seasons do
     member do
       post :recalculate_all

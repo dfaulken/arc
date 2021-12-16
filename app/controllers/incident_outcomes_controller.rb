@@ -1,5 +1,7 @@
 class IncidentOutcomesController < ApplicationController
   before_action :set_incident_outcome, only: %i[ show edit update destroy ]
+  before_action :authenticate_mod!
+  before_action :set_incident, only: %i[ new edit ]
 
   # GET /incident_outcomes or /incident_outcomes.json
   def index
@@ -13,6 +15,7 @@ class IncidentOutcomesController < ApplicationController
   # GET /incident_outcomes/new
   def new
     @incident_outcome = IncidentOutcome.new
+    @incident_outcome.incident = @incident
   end
 
   # GET /incident_outcomes/1/edit
@@ -25,7 +28,7 @@ class IncidentOutcomesController < ApplicationController
 
     respond_to do |format|
       if @incident_outcome.save
-        format.html { redirect_to @incident_outcome, notice: "Incident outcome was successfully created." }
+        format.html { redirect_to race_results_path(race: @incident_outcome.incident.race), notice: "Incident outcome was successfully created." }
         format.json { render :show, status: :created, location: @incident_outcome }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -59,7 +62,11 @@ class IncidentOutcomesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_incident_outcome
-      @incident_outcome = IncidentOutcome.find(params[:id])
+      @incident_outcome = IncidentOutcome.find(params.require(:id))
+    end
+
+    def set_incident
+      @incident = Incident.find(params.require(:incident))
     end
 
     # Only allow a list of trusted parameters through.

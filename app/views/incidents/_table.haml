@@ -1,0 +1,42 @@
+%table
+  %thead
+    %tr
+      %th Race
+      %th Lap
+      %th Reported by
+      %th Drivers involved
+      %th Description
+      %th Outcomes
+      - if mod_signed_in?
+        %th{colspan: 2}
+  %tbody
+    - @incidents.each do |incident|
+      %tr
+        %td= incident.race.name
+        %td= incident.lap_number
+        %td= incident.reported_by
+        %td= incident.drivers_involved
+        %td= incident.description
+        %td
+          - if incident.visible_outcomes(mod_signed_in?).any?
+            %ul
+              - incident.visible_outcomes(mod_signed_in?).each do |outcome|
+                %li
+                  = outcome.explanation
+                  - if outcome.penalty_points > 0 || outcome.received_warning?
+                    %ul
+                      - if outcome.penalty_points > 0
+                        %li
+                          Penalty points:
+                          = outcome.penalty_points
+                      - if outcome.received_warning?
+                        %li Warning received: yes
+                  - if mod_signed_in? && !outcome.published?
+                    .not-published OUTCOME NOT PUBLISHED
+          - elsif !mod_signed_in?
+            Outcomes are still under deliberation for this race.
+          - if mod_signed_in?
+            = link_to 'Record outcome', new_incident_outcome_path(incident: incident)
+        - if mod_signed_in?
+          %td= link_to 'Edit incident details', edit_incident_path(incident, race: incident.race)
+          %td= button_to 'Destroy incident', incident, method: :delete, data: { confirm: 'Are you sure?' }

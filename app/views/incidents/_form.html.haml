@@ -8,18 +8,20 @@
 
   .field
     = f.label :race_id
-    = f.number_field :race_id
+    = f.select :race_id, options_from_collection_for_select(@race.season.races, :id, :name, @race.id), readonly: true
   .field
     = f.label :lap_number
-    = f.number_field :lap_number
+    %em Use 0 for any session other than the race.
+    %br
+    = f.number_field :lap_number, min: 0, max: @race.laps, required: true
   .field
     = f.label :reported_by
-    = f.text_field :reported_by
+    = f.text_field :reported_by, required: true, size: 25
   .field
     = f.label :drivers_involved
-    = f.text_field :drivers_involved
+    = f.text_field :drivers_involved, required: true, size: 75
   .field
     = f.label :description
-    = f.text_area :description
+    = f.text_area :description, required: true, size: '75x20'
   .actions
     = f.submit 'Save'

@@ -23,7 +23,7 @@
       - @race_results.each do |race_result|
         %tr
           %td= race_result.position
-          %td= race_result.driver.name
+          %td= race_result.driver.numbered_name_with_nickname
           %td= race_result.scored_pole_position? ? 'Yes' : ''
           %td= race_result.laps_led
           %td= race_result.most_laps_led? ? 'Yes' : ''
@@ -35,6 +35,14 @@
               %ul
                 - race_result.scores.each do |score|
                   %li #{score.points} (#{score.points_system.name})
-  = link_to 'Back to season', races_path(season: @race.season)
   - if mod_signed_in?
     = button_to 'Delete all race results', delete_all_race_results_path(race: @race)
+  - if @incidents.any?
+    %h2 Incidents
+    = render partial: 'incidents/table'
+  - if mod_signed_in?
+    = link_to 'Record incident', new_incident_path(race: @race)
+    %br
+    - if @race.unpublished_outcomes.any?
+      = button_to 'Publish incident outcomes', publish_incident_outcomes_race_path(@race)
+  = link_to 'Back to season', races_path(season: @race.season)

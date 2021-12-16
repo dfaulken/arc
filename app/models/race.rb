@@ -4,7 +4,7 @@ class Race < ApplicationRecord
   has_many :results, class_name: 'RaceResult', inverse_of: :race
   has_many :drivers, through: :results
   has_many :incidents
-  has_many :incident_outcomes, through: :incidents
+  has_many :outcomes, through: :incidents
 
   default_scope { order :date }
 
@@ -37,7 +37,11 @@ class Race < ApplicationRecord
   end
 
   def publish_incident_outcomes!
-    incident_outcomes.update_all published: true
+    outcomes.update_all published: true
+  end
+
+  def unpublished_outcomes
+    outcomes.unpublished
   end
 
   def warnings
