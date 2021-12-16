@@ -31,8 +31,11 @@
                           = outcome.penalty_points
                       - if outcome.received_warning?
                         %li Warning received: yes
-                  - if mod_signed_in? && !outcome.published?
-                    .not-published OUTCOME NOT PUBLISHED
+                  - if mod_signed_in? 
+                    = link_to 'Edit outcome', edit_incident_outcome_path(outcome, incident: incident)
+                    = button_to 'Destroy outcome', outcome, method: :delete, data: { confirm: 'Are you sure?' }
+                    - unless outcome.published?
+                      .not-published OUTCOME NOT PUBLISHED
           - elsif !mod_signed_in?
             Outcomes are still under deliberation for this race.
           - if mod_signed_in?

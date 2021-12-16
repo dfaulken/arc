@@ -1,6 +1,6 @@
 class Incident < ApplicationRecord
   belongs_to :race
-  has_many :outcomes, class_name: 'IncidentOutcome', inverse_of: :incident
+  has_many :outcomes, class_name: 'IncidentOutcome', inverse_of: :incident, dependent: :destroy
 
   validates :lap_number, inclusion: { in: ->(incident) { 0.upto(incident.race.laps) } }
   validates :reported_by, presence: true
