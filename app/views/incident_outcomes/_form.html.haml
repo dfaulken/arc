@@ -1,0 +1,31 @@
+= form_for @incident_outcome do |f|
+  - if @incident_outcome.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@incident_outcome.errors.count, "error")} prohibited this incident_outcome from being saved:"
+      %ul
+        - @incident_outcome.errors.full_messages.each do |message|
+          %li= message
+
+  .field
+    = f.label :incident_id
+    = f.number_field :incident_id
+  .field
+    = f.label :driver_id
+    = f.number_field :driver_id
+  .field
+    = f.label :received_warning
+    = f.check_box :received_warning
+  .field
+    = f.label :penalty_points
+    = f.number_field :penalty_points
+  .field
+    = f.label :expires_at
+    = f.datetime_select :expires_at
+  .field
+    = f.label :explanation
+    = f.text_area :explanation
+  .field
+    = f.label :published
+    = f.check_box :published
+  .actions
+    = f.submit 'Save'

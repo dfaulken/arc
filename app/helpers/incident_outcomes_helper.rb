@@ -1,0 +1,2 @@
+module IncidentOutcomesHelper
+end

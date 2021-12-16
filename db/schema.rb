@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_15_221421) do
+ActiveRecord::Schema.define(version: 2021_12_16_162934) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,6 +19,8 @@ ActiveRecord::Schema.define(version: 2021_12_15_221421) do
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "warnings_convert_to_penalty_points"
+    t.integer "number_of_warnings_per_penalty_point"
   end
 
   create_table "drivers", force: :cascade do |t|
@@ -32,6 +34,28 @@ ActiveRecord::Schema.define(version: 2021_12_15_221421) do
   create_table "dropped_races", force: :cascade do |t|
     t.integer "race_result_id"
     t.integer "season_standing_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "incident_outcomes", force: :cascade do |t|
+    t.integer "incident_id"
+    t.integer "driver_id"
+    t.boolean "received_warning"
+    t.integer "penalty_points"
+    t.datetime "expires_at"
+    t.text "explanation"
+    t.boolean "published"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "incidents", force: :cascade do |t|
+    t.integer "race_id"
+    t.integer "lap_number"
+    t.string "reported_by"
+    t.string "drivers_involved"
+    t.text "description"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

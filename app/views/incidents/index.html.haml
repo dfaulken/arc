@@ -1,0 +1,29 @@
+%h1 Listing incidents
+
+%table
+  %thead
+    %tr
+      %th Race
+      %th Lap number
+      %th Reported by
+      %th Drivers involved
+      %th Description
+      %th
+      %th
+      %th
+
+  %tbody
+    - @incidents.each do |incident|
+      %tr
+        %td= incident.race_id
+        %td= incident.lap_number
+        %td= incident.reported_by
+        %td= incident.drivers_involved
+        %td= incident.description
+        %td= link_to 'Show', incident
+        %td= link_to 'Edit', edit_incident_path(incident)
+        %td= link_to 'Destroy', incident, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Incident', new_incident_path

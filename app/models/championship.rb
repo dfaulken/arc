@@ -5,6 +5,7 @@ class Championship < ApplicationRecord
   has_many :results, through: :seasons
 
   validates :name, presence: true, uniqueness: true
+  validates :number_of_warnings_per_penalty_point, presence: true, if: :warnings_convert_to_penalty_points?
 
   def combined?
     track_types.count > 1

@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :incident_outcomes
+  resources :incidents
   devise_for :mods
   root to: 'championships#index'
 

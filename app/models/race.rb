@@ -3,6 +3,8 @@ class Race < ApplicationRecord
   belongs_to :track
   has_many :results, class_name: 'RaceResult', inverse_of: :race
   has_many :drivers, through: :results
+  has_many :incidents
+  has_many :incident_outcomes, through: :incidents
 
   default_scope { order :date }
 
@@ -32,6 +34,10 @@ class Race < ApplicationRecord
       true
     else track.track_type == track_type
     end
+  end
+
+  def publish_incident_outcomes!
+    incident_outcomes.update_all published: true
   end
 
   def warnings

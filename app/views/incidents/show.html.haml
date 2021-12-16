@@ -1,0 +1,21 @@
+%p#notice= notice
+
+%p
+  %b Race:
+  = @incident.race_id
+%p
+  %b Lap number:
+  = @incident.lap_number
+%p
+  %b Reported by:
+  = @incident.reported_by
+%p
+  %b Drivers involved:
+  = @incident.drivers_involved
+%p
+  %b Description:
+  = @incident.description
+
+= link_to 'Edit', edit_incident_path(@incident)
+\|
+= link_to 'Back', incidents_path

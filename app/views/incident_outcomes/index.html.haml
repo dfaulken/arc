@@ -1,0 +1,33 @@
+%h1 Listing incident_outcomes
+
+%table
+  %thead
+    %tr
+      %th Incident
+      %th Driver
+      %th Received warning
+      %th Penalty points
+      %th Expires at
+      %th Explanation
+      %th Published
+      %th
+      %th
+      %th
+
+  %tbody
+    - @incident_outcomes.each do |incident_outcome|
+      %tr
+        %td= incident_outcome.incident_id
+        %td= incident_outcome.driver_id
+        %td= incident_outcome.received_warning
+        %td= incident_outcome.penalty_points
+        %td= incident_outcome.expires_at
+        %td= incident_outcome.explanation
+        %td= incident_outcome.published
+        %td= link_to 'Show', incident_outcome
+        %td= link_to 'Edit', edit_incident_outcome_path(incident_outcome)
+        %td= link_to 'Destroy', incident_outcome, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Incident outcome', new_incident_outcome_path

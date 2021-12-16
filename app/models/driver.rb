@@ -3,6 +3,8 @@ class Driver < ApplicationRecord
   has_many :races, through: :race_results
   has_many :seasons, through: :races
   has_many :championships, through: :seasons
+  has_many :incident_outcomes
+  has_many :incidents, through: :incident_outcomes
 
   default_scope { order :name }
   scope :with_car_number, -> { where.not car_number: [nil, ''] }
@@ -15,6 +17,30 @@ class Driver < ApplicationRecord
 
   def car_number_as_integer
     car_number.to_i
+  end
+
+  def current_championship_outcomes(championship)
+    incident_outcomes.joins(incident: { race: :season })
+       .where(seasons: { championship_id: championship.id })
+       .where('expires_at > ?', DateTime.now)
+       .uniq
+  end
+
+  def current_warnings(championship)
+    championship_warnings = current_championship_outcomes(championship).where(received_warning: true).count
+    if championship.warnings_convert_to_penalty_points?
+      championship_warnings = championship_warnings % championship.number_of_warnings_per_penalty_point
+    end
+    return championship_warnings
+  end
+
+  def current_penalty_points(championship)
+    championship_penalty_points = current_championship_outcomes(championship).pluck(:penalty_points).inject(:+)
+    if championship.warnings_convert_to_penalty_points?
+      championship_warnings = current_championship_outcomes(championship).where(received_warning: true).count
+      championship_penalty_points += championship_warnings / championship.number_of_warnings_per_penalty_point
+    end
+    championship_penalty_points
   end
 
   def in_championship_contention?(season:)

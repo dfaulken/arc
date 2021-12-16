@@ -1,0 +1,27 @@
+%p#notice= notice
+
+%p
+  %b Incident:
+  = @incident_outcome.incident_id
+%p
+  %b Driver:
+  = @incident_outcome.driver_id
+%p
+  %b Received warning:
+  = @incident_outcome.received_warning
+%p
+  %b Penalty points:
+  = @incident_outcome.penalty_points
+%p
+  %b Expires at:
+  = @incident_outcome.expires_at
+%p
+  %b Explanation:
+  = @incident_outcome.explanation
+%p
+  %b Published:
+  = @incident_outcome.published
+
+= link_to 'Edit', edit_incident_outcome_path(@incident_outcome)
+\|
+= link_to 'Back', incident_outcomes_path
