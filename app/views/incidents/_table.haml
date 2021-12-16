@@ -22,7 +22,10 @@
             %ul
               - incident.visible_outcomes(mod_signed_in?).each do |outcome|
                 %li
-                  = outcome.explanation
+                  Outcome for:
+                  = link_to outcome.driver.name, outcome.driver
+                  %br
+                  %em= outcome.explanation
                   - if outcome.penalty_points > 0 || outcome.received_warning?
                     %ul
                       - if outcome.penalty_points > 0
@@ -37,7 +40,7 @@
                     - unless outcome.published?
                       .not-published OUTCOME NOT PUBLISHED
           - elsif !mod_signed_in?
-            Outcomes are still under deliberation for this race.
+            Outcomes are still under deliberation for this incident.
           - if mod_signed_in?
             = link_to 'Record outcome', new_incident_outcome_path(incident: incident)
         - if mod_signed_in?

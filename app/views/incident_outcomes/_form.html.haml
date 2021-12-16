@@ -11,7 +11,7 @@
     = f.select :incident_id, options_from_collection_for_select(@incident.race.incidents, :id, :name, @incident.id), readonly: true
   .field
     = f.label :driver_id
-    = f.select :driver_id, options_from_collection_for_select(@incident.race.drivers, :id, :name)
+    = f.select :driver_id, options_from_collection_for_select(@incident.race.drivers, :id, :name, @incident_outcome.driver_id)
   .field
     = f.label :received_warning
     = f.check_box :received_warning

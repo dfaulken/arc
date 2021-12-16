@@ -41,7 +41,7 @@ class IncidentOutcomesController < ApplicationController
   def update
     respond_to do |format|
       if @incident_outcome.update(incident_outcome_params)
-        format.html { redirect_to @incident_outcome, notice: "Incident outcome was successfully updated." }
+        format.html { redirect_to race_results_path(race: @incident_outcome.incident.race), notice: "Incident outcome was successfully updated." }
         format.json { render :show, status: :ok, location: @incident_outcome }
       else
         format.html { render :edit, status: :unprocessable_entity }
