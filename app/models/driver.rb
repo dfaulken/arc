@@ -5,6 +5,8 @@ class Driver < ApplicationRecord
   has_many :championships, through: :seasons
   has_many :incident_outcomes
   has_many :incidents, through: :incident_outcomes
+  has_many :team_memberships
+  has_many :teams, through: :team_memberships
 
   default_scope { order :name }
   scope :with_car_number, -> { where.not car_number: [nil, ''] }
