@@ -17,10 +17,14 @@ class RaceResult < ApplicationRecord
   after_create -> { calculate_and_persist_score! }
   after_update -> { scores.each(&:calculate!) && scores.each(&:save) && race.season.calculate_standings! }
 
-  def calculate_and_persist_score!
+  def calculate_score
     new_score = scores.build points_system: default_points_system
     new_score.calculate!
-    new_score.save!
+    new_score
+  end
+
+  def calculate_and_persist_score!
+    calculate_score.save!
   end
 
   def default_points_system

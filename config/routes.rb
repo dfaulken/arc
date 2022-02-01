@@ -32,6 +32,7 @@ Rails.application.routes.draw do
   resources :seasons do
     member do
       post :recalculate_all
+      get  :projection
     end
   end
   resources :tracks
