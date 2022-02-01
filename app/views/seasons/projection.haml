@@ -47,17 +47,18 @@
                 .results
   = link_to 'Reselect drivers', projection_season_path(@season, selected: @drivers.pluck(:id))
 - else
-  Select drivers who are entered in the race:
-  = form_with url: projection_season_path(@season), method: :get do |form|
-    - drivers_per_column = 20
-    - columns = (@all_drivers.count / drivers_per_column) + 1
-    %table
-      - 1.upto(drivers_per_column).each do |row|
-        %tr
-          - 1.upto(columns).each do |column|
-            - driver_index = (column - 1) * drivers_per_column + row - 1
-            - driver = @all_drivers[driver_index]
-            - if driver
-              %td= form.check_box :drivers, { multiple: true, checked: @selected.include?(driver)}, driver.id, nil
-              %td= form.label "drivers_#{driver.id}", driver.name
-    = form.submit 'Select drivers'
+  .selection
+    Select drivers who are entered in the race:
+    = form_with url: projection_season_path(@season), method: :get do |form|
+      - drivers_per_column = 20
+      - columns = (@all_drivers.count / drivers_per_column) + 1
+      %table
+        - 1.upto(drivers_per_column).each do |row|
+          %tr
+            - 1.upto(columns).each do |column|
+              - driver_index = (column - 1) * drivers_per_column + row - 1
+              - driver = @all_drivers[driver_index]
+              - if driver
+                %td= form.check_box :drivers, { multiple: true, checked: @selected.include?(driver)}, driver.id, nil
+                %td= form.label "drivers_#{driver.id}", driver.name
+      = form.submit 'Select drivers'
