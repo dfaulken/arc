@@ -4,6 +4,7 @@
 = link_to "Back to #{@season.name}", races_path(season: @season)
 
 - if @drivers.present?
+  Drag drivers to reorder and preview points standings projections.
   .projection
     .positions
       %ul
