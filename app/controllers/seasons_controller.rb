@@ -1,7 +1,7 @@
 class SeasonsController < ApplicationController
   before_action :set_championship, only: %i[index new]
-  before_action :set_season, only: %i[ edit update destroy recalculate_all ]
-  before_action :authenticate_mod!, except: %i[ index ]
+  before_action :set_season, only: %i[ edit update destroy projection recalculate_all ]
+  before_action :authenticate_mod!, except: %i[ index projection ]
 
   # GET /seasons or /seasons.json
   def index
@@ -63,6 +63,30 @@ class SeasonsController < ApplicationController
     end
   end
 
+  def projection
+    respond_to do |format|
+      format.html do
+        if params[:drivers].present?
+          @drivers = Driver.find(params.require(:drivers))
+          @standings = @season.standings.where track_type: nil
+        else
+          if params[:selected]
+            @selected = Driver.find(params.require(:selected))
+          else
+            @selected = Driver.none
+          end
+          @all_drivers = Driver.all
+        end
+        render :projection
+      end
+      format.json do
+        race = @season.races.select(&:incomplete?).sort_by(&:date).first
+        head :bad_request unless race
+        render json: @season.calculate_projection(construct_provisional_results(race))
+      end
+    end
+  end
+
   def recalculate_all
     @season.calculate_scores!
     @season.races.each(&:award_most_laps_led!)
@@ -114,6 +138,25 @@ class SeasonsController < ApplicationController
           .sort_by(&:last)
           .first(10)
       }
+    end
+
+    def construct_provisional_results(race)
+      results = []
+      # can't require since might be empty
+      pole_position_driver = Driver.find_by id: params[:polePosition]
+      most_laps_led_driver = Driver.find_by id: params[:ledMostLaps]
+      params.require(:drivers).each do |_index, driver_data|
+        result = RaceResult.new
+        result.race = race
+        result.driver = Driver.find_by id: driver_data.require(:driverID)
+        result.scored_pole_position = result.driver == pole_position_driver
+        result.most_laps_led = result.driver == most_laps_led_driver
+        result.laps_led = driver_data.require(:ledLap) == 'true' ? 1 : 0
+        result.finished_race = driver_data.require(:dnf) == 'false'
+        result.position = driver_data.require(:position).to_i
+        results << result
+      end
+      results
     end
 
     def set_championship

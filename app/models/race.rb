@@ -25,6 +25,10 @@ class Race < ApplicationRecord
     end
   end
 
+  def incomplete?
+    results.none?
+  end
+
   def name
     "#{track.name} (#{season.name})"
   end
