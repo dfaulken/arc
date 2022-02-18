@@ -25,6 +25,13 @@ class Championship < ApplicationRecord
     races.joins(:track, :results).where(tracks: { track_type: track_type }).uniq.sum(&:laps)
   end
 
+  def next_season_index
+    if seasons.any?(&:persisted?)
+      seasons.select(&:persisted?).max(&:index).succ
+    else 1
+    end
+  end
+
   def pole_positions(track_type:)
     finishes(track_type: track_type).where(scored_pole_position: true)
   end
