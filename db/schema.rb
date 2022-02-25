@@ -10,10 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_16_162934) do
+ActiveRecord::Schema.define(version: 2022_03_04_040500) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "championship_drivers", force: :cascade do |t|
+    t.integer "championship_id"
+    t.integer "driver_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "car_number"
+  end
 
   create_table "championships", force: :cascade do |t|
     t.string "name"
@@ -25,10 +33,8 @@ ActiveRecord::Schema.define(version: 2021_12_16_162934) do
 
   create_table "drivers", force: :cascade do |t|
     t.string "name"
-    t.string "nickname"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "car_number"
   end
 
   create_table "dropped_races", force: :cascade do |t|
@@ -142,6 +148,20 @@ ActiveRecord::Schema.define(version: 2021_12_16_162934) do
     t.integer "championship_id"
     t.integer "points_system_id"
     t.integer "index"
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "team_memberships", force: :cascade do |t|
+    t.integer "team_id"
+    t.integer "driver_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "teams", force: :cascade do |t|
+    t.integer "season_id"
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

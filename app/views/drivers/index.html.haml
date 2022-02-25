@@ -1,12 +1,11 @@
 - title 'Drivers'
 %p#notice= notice
 %h1 Drivers
-= link_to 'Numbers', numbers_drivers_path
+= link_to 'Numbers', numbers_drivers_path(championship: @championship)
 %table
   %thead
     %tr
       %th Name
-      %th Nickname
       %th Car Number
       %th Races
       %th Last season raced
@@ -15,15 +14,16 @@
     - @drivers.each do |driver|
       %tr
         %td= driver.name
-        %td= driver.nickname
-        %td= driver.car_number
-        %td= driver.races.count
+        %td= driver.championship_entry(@championship).car_number
+        %td= driver.races.in_championship(@championship).count
         %td
-          - if driver.races.any?
-            - season = driver.races.last.season
+          - season = driver.last_season_raced(@championship)
+          - if season.present?
             = link_to season.name, races_path(season: season)
-        %td= link_to 'Show', driver
-        %td= link_to 'Edit', edit_driver_path(driver)
+        %td= link_to 'Show'
+        %td= link_to 'Edit', edit_driver_path(driver, championship: @championship)
+        %td= link_to 'Deregister', deregister_driver_championship_path(@championship, driver_id: driver.id), method: :post, data: { confirm: 'Are you sure?' }
         %td= link_to 'Destroy', driver, method: :delete, data: { confirm: 'Are you sure?' }
 %br/
-= link_to 'New Driver', new_driver_path
+= link_to 'New Driver', new_driver_path(championship: @championship)
+= link_to 'Register Existing Driver', register_driver_championship_path(@championship)

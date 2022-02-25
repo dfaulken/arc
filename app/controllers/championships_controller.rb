@@ -1,5 +1,5 @@
 class ChampionshipsController < ApplicationController
-  before_action :set_championship, only: %i[ show edit update destroy ]
+  before_action :set_championship, only: %i[ deregister_driver show edit register_driver update destroy ]
   before_action :authenticate_mod!, except: %i[ index show ]
 
   # GET /championships or /championships.json
@@ -54,6 +54,26 @@ class ChampionshipsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to championships_url, notice: "Championship was successfully destroyed." }
       format.json { head :no_content }
+    end
+  end
+
+  def deregister_driver
+    @driver = Driver.find(params.require(:driver_id))
+    @driver.championship_entry(@championship).destroy
+    redirect_to drivers_url(championship: @championship), notice: 'Driver was successfully deregistered from championship.'
+  end
+
+  def register_driver
+    if request.get?
+      @drivers = Driver.all - @championship.drivers
+    else
+      @driver = Driver.find(params.require(:driver_id))
+      @entry = ChampionshipDriver.new(championship: @championship, driver: @driver, car_number: params.require(:car_number))
+      if @entry.save
+        redirect_to drivers_url(championship: @championship), notice: 'Driver registered to championship.'
+      else
+        redirect_to register_driver_championship_url(@championship), notice: "Car number #{@entry.car_number} is already assigned in this championship."
+      end
     end
   end
 

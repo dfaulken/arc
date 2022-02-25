@@ -11,7 +11,7 @@ class IncidentOutcome < ApplicationRecord
   scope :unpublished, -> { where.not published: true }
 
   def default_expiration_date
-    incident.race.date + 3.months
+    incident.race.date + 6.months
   end
 
 end

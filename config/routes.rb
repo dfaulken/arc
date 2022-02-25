@@ -4,7 +4,13 @@ Rails.application.routes.draw do
   devise_for :mods
   root to: 'championships#index'
 
-  resources :championships
+  resources :championships do
+    member do
+      post :deregister_driver
+      get  :register_driver
+      post :register_driver
+    end
+  end
   resources :drivers do
     collection do
       get  :numbers
