@@ -3,7 +3,9 @@ namespace :championship_drivers do
   task create: :environment do
     Driver.all.each do |driver|
       driver.inferred_championships.each do |championship|
-        ChampionshipDriver.create! championship: championship, driver: driver, car_number: driver.car_number
+        unless driver.championship_entry(championship).present?
+          ChampionshipDriver.create! championship: championship, driver: driver, car_number: driver.car_number
+        end
       end
     end
   end
