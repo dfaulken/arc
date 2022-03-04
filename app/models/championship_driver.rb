@@ -4,9 +4,9 @@ class ChampionshipDriver < ApplicationRecord
 
   scope :with_car_number, -> { where.not car_number: nil }
 
-  validates :championship, uniqueness: { scope: :driver, allow_blank: true }
-  validates :car_number, format: { with: /\A\d{1,3}\z/, message: 'must contain 1-3 digits' }, allow_blank: true
-  validates :car_number, uniqueness: { scope: :championship }
+  validates :championship, uniqueness: { scope: :driver }
+  validates :car_number, format: { with: /\A\d{1,3}\z/, message: 'must contain 1-3 digits' }
+  validates :car_number, uniqueness: { scope: :championship, allow_blank: true }
 
   def car_number_as_integer
     car_number.try(:to_i)
