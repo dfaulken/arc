@@ -28,7 +28,7 @@ class DriversController < ApplicationController
   # POST /drivers or /drivers.json
   def create
     @driver = Driver.new(driver_params)
-    @entry = ChampionshipDriver.new(driver_championship_params)
+    @entry = ChampionshipDriver.new(championship_driver_params)
     @entry.driver = @driver
 
     respond_to do |format|
@@ -45,7 +45,7 @@ class DriversController < ApplicationController
   # PATCH/PUT /drivers/1 or /drivers/1.json
   def update
     respond_to do |format|
-      if @driver.update(driver_params) && @driver.championship_entry(@championship).update(driver_championship_params)
+      if @driver.update(driver_params) && @driver.championship_entry(@championship).update(championship_driver_params)
         format.html { redirect_to drivers_path(championship: @championship), notice: "Driver was successfully updated." }
         format.json { render :show, status: :ok, location: @driver }
       else
@@ -88,7 +88,7 @@ class DriversController < ApplicationController
       params.require(:driver).permit(:name, :car_number, championship_driver: %i[car_number championship_id]).except(:championship_driver)
     end
 
-    def driver_championship_params
+    def championship_driver_params
       params.require(:driver).require(:championship_driver).permit(:car_number, :championship_id)
     end
 
