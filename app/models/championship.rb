@@ -26,7 +26,7 @@ class Championship < ApplicationRecord
   end
 
   def free_numbers_below_100
-    0.upto(99).to_a - drivers.pluck(:car_number).compact.map(&:to_i) - [1] # champs
+    0.upto(99).to_a - championship_drivers.pluck(:car_number).compact.map(&:to_i) - [1] # champs
   end
 
   def laps_completed(track_type:)
