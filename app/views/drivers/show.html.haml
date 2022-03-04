@@ -3,9 +3,6 @@
 %p
   %strong Name:
   = @driver.name
-%p
-  %strong Nickname:
-  = @driver.nickname
 %h2 Championship Results
 - @results.each_pair do |championship, championship_data|
   %h2= link_to championship.name, seasons_path(championship: championship)
@@ -25,5 +22,3 @@
 - if @incidents.any?
   %h2 Incidents
   = render 'incidents/table'
-- if mod_signed_in?
-  = link_to 'Edit', edit_driver_path(@driver)

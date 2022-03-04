@@ -5,6 +5,10 @@ class Championship < ApplicationRecord
   has_many :outcomes, through: :incidents
   has_many :tracks, through: :races
   has_many :results, through: :seasons
+  has_many :championship_drivers
+  has_many :drivers, through: :championship_drivers
+
+  default_scope { order :name }
 
   validates :name, presence: true, uniqueness: true
   validates :number_of_warnings_per_penalty_point, presence: true, if: :warnings_convert_to_penalty_points?
@@ -19,6 +23,10 @@ class Championship < ApplicationRecord
 
   def finishes(track_type:)
     results.joins(race: :track).where(tracks: { track_type: track_type })
+  end
+
+  def free_numbers_below_100
+    0.upto(99).to_a - drivers.pluck(:car_number).compact.map(&:to_i) - [1] # champs
   end
 
   def laps_completed(track_type:)

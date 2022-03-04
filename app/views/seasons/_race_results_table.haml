@@ -26,7 +26,7 @@
       %tr
         - standing = @standings[driver]
         %td= standing.position
-        %td.driver-name{class: ('championship-contender' if driver.in_championship_contention?(season: @season))}= link_to driver.numbered_name_with_nickname, driver
+        %td.driver-name{class: ('championship-contender' if driver.in_championship_contention?(season: @season))}= link_to driver.championship_entry(@season.championship).numbered_name, driver
         - @races.each do |race|
           - result = @results[driver][race]
           - if result
