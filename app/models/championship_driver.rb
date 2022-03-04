@@ -4,7 +4,7 @@ class ChampionshipDriver < ApplicationRecord
 
   scope :with_car_number, -> { where.not car_number: nil }
 
-  validates :championship, uniqueness: { scope: :driver }
+  validates :championship, uniqueness: { scope: :driver, allow_blank: true }
   validates :car_number, format: { with: /\A\d{1,3}\z/, message: 'must contain 1-3 digits' }, allow_blank: true
   validates :car_number, uniqueness: { scope: :championship }
 
