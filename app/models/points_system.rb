@@ -10,6 +10,7 @@ class PointsSystem < ApplicationRecord
   validates :any_lap_led_points, presence: true
   validates :most_laps_led_points, presence: true
   validates :race_finished_points, presence: true
+  validates :team_results_counted_per_race, presence: true
 
   def drops_rounds?
     worst_rounds_dropped > 0

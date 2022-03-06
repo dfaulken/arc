@@ -4,6 +4,8 @@ class Season < ApplicationRecord
   has_many :scores, through: :results
   has_many :drivers, through: :races
   has_many :standings, class_name: 'SeasonStanding', inverse_of: :season
+  has_many :teams
+  has_many :team_standings, through: :teams
   belongs_to :championship
   belongs_to :points_system
 
@@ -26,6 +28,13 @@ class Season < ApplicationRecord
   end
 
   def calculate_standings!
+    calculate_driver_standings!
+    if teams.any?
+      calculate_team_standings!
+    end
+  end
+
+  def calculate_driver_standings!
     standings.delete_all
     if championship.combined?
       championship.track_types.each do |track_type|
@@ -33,6 +42,18 @@ class Season < ApplicationRecord
       end
     end
     calculate_standings_for! TrackType.any
+  end
+
+  def calculate_team_standings!
+    teams.each do |team|
+      team.team_standings.delete_all if team.team_standings.present?
+    end
+    if championship.combined?
+      championship.track_types.each do |track_type|
+        calculate_team_standings_for! track_type
+      end
+    end
+    calculate_team_standings_for! TrackType.any
   end
 
   def calculate_projection(provisional_results)
@@ -76,6 +97,39 @@ class Season < ApplicationRecord
       ]
     end
     grouped_sorters
+  end
+
+  def calculate_team_standings_for(track_type, grouped_driver_scores)
+    grouped_sorters = {}
+    teams.each do |team|
+      team_scores = []
+      team.drivers.each do |driver|
+        team_scores += grouped_driver_scores[driver].values.compact if grouped_driver_scores.has_key?(driver)
+      end
+      if points_system.team_results_counted_per_race < team.drivers.count
+        counted_team_scores = []
+        races.each do |race|
+          team_race_scores = team_scores.select do |score|
+            score.race_result.race == race
+          end.sort_by(&:points).reverse
+          counted_team_scores += team_race_scores.first(points_system.team_results_counted_per_race)
+        end
+        team_scores = counted_team_scores
+      end
+      points = team_scores.sum(&:points)
+      best_and_earliest_result = team_scores.map(&:race_result).min_by{ |rr| [rr.position, rr.race.date]}
+      grouped_sorters[team] = [
+        points * -1, # flip for sorting, flip back for recording
+        best_and_earliest_result.try(:position),
+        team_scores.count{|s| s.race_result.position == best_and_earliest_result.position} * -1, # flip for sorting
+        races.index(best_and_earliest_result.try(:race))
+      ]
+    end
+    grouped_sorters
+  end
+
+  def drivers_without_teams
+    championship.drivers - drivers.joins(team_memberships: :team).where(teams: { season: self })
   end
 
   def finish_date
@@ -124,6 +178,15 @@ class Season < ApplicationRecord
     grouped
   end
 
+  def grouped_team_standings(track_type = nil)
+    grouped = {}
+    teams.each do |team|
+      standing = team.team_standings.find_by(track_type: SeasonStanding.effective_track_type(track_type))
+      grouped[team] = standing if standing.present?
+    end
+    grouped
+  end
+
   def grouped_points_progression(track_type = TrackType.any)
     grouped = {}
     track_type_races = races.select do |race|
@@ -145,6 +208,10 @@ class Season < ApplicationRecord
       grouped[driver.name] = points_progression
     end
     grouped
+  end
+
+  def next_team_name
+    "Team #{teams.count.succ}"
   end
 
   def ongoing?
@@ -175,6 +242,18 @@ class Season < ApplicationRecord
       dropped_scores.each do |score|
         standing.dropped_races.create! race_result: score.race_result
       end
+    end
+  end
+
+  def calculate_team_standings_for!(track_type)
+    grouped_sorters = calculate_team_standings_for(track_type, grouped_scores(track_type))
+    sorted_teams = grouped_sorters.keys.sort_by do |team|
+      grouped_sorters[team]
+    end
+    sorted_teams.each.with_index(1) do |team, position|
+      points, _best_result_position, _count_of_best_result, _index_of_best_result = grouped_sorters[team]
+      team.team_standings.create! position: position, points: points * -1,
+        track_type: SeasonStanding.effective_track_type(track_type)
     end
   end
 

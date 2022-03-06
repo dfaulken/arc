@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :teams
   resources :incident_outcomes
   resources :incidents
   devise_for :mods

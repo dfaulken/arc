@@ -6,6 +6,8 @@ class Driver < ApplicationRecord
   has_many :championships, through: :championship_drivers
   has_many :incident_outcomes
   has_many :incidents, through: :incident_outcomes
+  has_many :team_memberships
+  has_many :teams, through: :team_memberships
 
   default_scope { order :name }
 

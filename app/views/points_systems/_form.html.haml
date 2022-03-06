@@ -26,6 +26,9 @@
     = form.label :race_finished_points
     = form.number_field :race_finished_points
   .field
+    = form.label :team_results_counted_per_race
+    = form.number_field :team_results_counted_per_race
+  .field
     Points Allocations
     %table
       - points_system.points_allocations.each do |allocation|

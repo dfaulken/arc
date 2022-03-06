@@ -27,6 +27,15 @@ class RaceResult < ApplicationRecord
     calculate_score.save!
   end
 
+  def counts_for_team?(team)
+    if race.season.points_system.team_results_counted_per_race < team.drivers.count
+      race.results.where(driver: team.drivers).sort_by do |race_result|
+        race_result.score.points
+      end.reverse.first(race.season.points_system.team_results_counted_per_race).include? self
+    else true
+    end
+  end
+
   def default_points_system
     race.season.points_system
   end

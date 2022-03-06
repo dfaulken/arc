@@ -1,3 +1,4 @@
+%h2 Drivers
 %table.race-results
   %thead
     %tr
@@ -40,3 +41,36 @@
           %td= standing.base_points
           %td= standing.dropped_points
         %td.points= standing.points
+- if @teams.any?
+  %h2 Teams
+  %table.race-results
+    %thead
+      %tr
+        %th.empty
+        %th Team
+        %th Driver
+        - @races.each do |race|
+          %th.race{colspan: 2}
+            .race-date= race.date
+            .race-track-name
+              .track-name= race.track.name
+    %tbody
+      - @teams.each do |team|
+        - team.drivers.sort_by{ |driver| @drivers.index driver }.each.with_index do |driver, driver_index|
+          %tr
+            - standing = @team_standings[team]
+            - if driver_index == 0
+              %td{rowspan: team.drivers.count}= standing.position
+              %td.driver-name{rowspan: team.drivers.count}= team.name
+            %td.driver-name= driver.name
+            - @races.each do |race|
+              - result = @results[driver].try(:[], race)
+              - if result
+                %td.result{class: race_result_classes(result)}= result.position
+                - score = @scores[driver][race]
+                %td.score{class: ('dropped' unless result.counts_for_team?(team))}= score.points
+              - else
+                %td
+                %td
+            - if driver_index == 0
+              %td.points{rowspan: team.drivers.count}= standing.points
