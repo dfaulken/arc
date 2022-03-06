@@ -106,7 +106,7 @@ class Season < ApplicationRecord
       team.drivers.each do |driver|
         team_scores += grouped_driver_scores[driver].values.compact if grouped_driver_scores.has_key?(driver)
       end
-      if points_system.team_results_counted_per_race < team.drivers.count
+      if points_system.team_results_counted_per_race && points_system.team_results_counted_per_race < team.drivers.count
         counted_team_scores = []
         races.each do |race|
           team_race_scores = team_scores.select do |score|
