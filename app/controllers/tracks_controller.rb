@@ -35,7 +35,7 @@ class TracksController < ApplicationController
   def update
     respond_to do |format|
       if @track.update(track_params)
-        format.html { redirect_to @tracks_path, notice: "Track was successfully updated." }
+        format.html { redirect_to tracks_path, notice: "Track was successfully updated." }
         format.json { render :show, status: :ok, location: @track }
       else
         format.html { render :edit, status: :unprocessable_entity }
