@@ -10,11 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema.define(version: 2022_01_30_172057) do
-=======
-ActiveRecord::Schema.define(version: 2022_03_04_040500) do
->>>>>>> main
+ActiveRecord::Schema.define(version: 2022_03_06_043520) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -160,6 +156,15 @@ ActiveRecord::Schema.define(version: 2022_03_04_040500) do
   create_table "team_memberships", force: :cascade do |t|
     t.integer "team_id"
     t.integer "driver_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "team_standings", force: :cascade do |t|
+    t.integer "team_id"
+    t.integer "position"
+    t.integer "points"
+    t.string "track_type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

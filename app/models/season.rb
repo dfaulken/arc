@@ -5,6 +5,7 @@ class Season < ApplicationRecord
   has_many :drivers, through: :races
   has_many :standings, class_name: 'SeasonStanding', inverse_of: :season
   has_many :teams
+  has_many :team_standings, through: :teams
   belongs_to :championship
   belongs_to :points_system
 
@@ -27,6 +28,13 @@ class Season < ApplicationRecord
   end
 
   def calculate_standings!
+    calculate_driver_standings!
+    if teams.any?
+      calculate_team_standings!
+    end
+  end
+
+  def calculate_driver_standings!
     standings.delete_all
     if championship.combined?
       championship.track_types.each do |track_type|
@@ -34,6 +42,18 @@ class Season < ApplicationRecord
       end
     end
     calculate_standings_for! TrackType.any
+  end
+
+  def calculate_team_standings!
+    teams.each do |team|
+      team.team_standings.delete_all if team.team_standings.present?
+    end
+    if championship.combined?
+      championship.track_types.each do |track_type|
+        calculate_team_standings_for! track_type
+      end
+    end
+    calculate_team_standings_for! TrackType.any
   end
 
   def calculate_projection(provisional_results)
@@ -74,6 +94,25 @@ class Season < ApplicationRecord
         all_driver_scores.compact.count{|score| score.race_result.position == best_result.position } * -1, # flip for sorting
         all_driver_scores.index(best_result_score),
         dropped_scores
+      ]
+    end
+    grouped_sorters
+  end
+
+  def calculate_team_standings_for(track_type, grouped_driver_scores)
+    grouped_sorters = {}
+    teams.each do |team|
+      team_scores = []
+      team.drivers.each do |driver|
+        team_scores += grouped_driver_scores[driver].values.compact
+      end
+      points = team_scores.sum(&:points)
+      best_and_earliest_result = team_scores.map(&:race_result).min_by{ |rr| [rr.position, rr.race.date]}
+      grouped_sorters[team] = [
+        points * -1, # flip for sorting, flip back for recording
+        best_and_earliest_result.position,
+        team_scores.count{|s| s.race_result.position == best_and_earliest_result.position} * -1, # flip for sorting
+        races.index(best_and_earliest_result.race)
       ]
     end
     grouped_sorters
@@ -125,6 +164,15 @@ class Season < ApplicationRecord
       .where(track_type: SeasonStanding.effective_track_type(track_type))
       .each do |standing|
       grouped[standing.driver] = standing
+    end
+    grouped
+  end
+
+  def grouped_team_standings(track_type = nil)
+    grouped = {}
+    teams.each do |team|
+      standing = team.team_standings.find_by(track_type: SeasonStanding.effective_track_type(track_type))
+      grouped[team] = standing if standing.present?
     end
     grouped
   end
@@ -184,6 +232,18 @@ class Season < ApplicationRecord
       dropped_scores.each do |score|
         standing.dropped_races.create! race_result: score.race_result
       end
+    end
+  end
+
+  def calculate_team_standings_for!(track_type)
+    grouped_sorters = calculate_team_standings_for(track_type, grouped_scores(track_type))
+    sorted_teams = grouped_sorters.keys.sort_by do |team|
+      grouped_sorters[team]
+    end
+    sorted_teams.each.with_index(1) do |team, position|
+      points, _best_result_position, _count_of_best_result, _index_of_best_result = grouped_sorters[team]
+      team.team_standings.create! position: position, points: points * -1,
+        track_type: SeasonStanding.effective_track_type(track_type)
     end
   end
 

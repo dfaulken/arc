@@ -40,3 +40,6 @@
           %td= standing.base_points
           %td= standing.dropped_points
         %td.points= standing.points
+%ul
+  - @team_standings.each_pair do |team, standing|
+    %li #{team.name}: #{standing.position} (#{standing.points})

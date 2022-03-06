@@ -14,6 +14,7 @@ class RacesController < ApplicationController
     end
     @races = @season.races.of_type(track_type)
     @standings = @season.grouped_standings(track_type)
+    @team_standings = @season.grouped_team_standings(track_type)
     @drivers = @standings.keys.sort_by {|driver| @standings[driver].position }
     @results = @season.grouped_results(track_type)
     @scores = @season.grouped_scores(track_type)
