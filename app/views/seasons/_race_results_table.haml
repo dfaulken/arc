@@ -56,7 +56,7 @@
               .track-name= race.track.name
     %tbody
       - @teams.each do |team|
-        - team.drivers.sort_by{ |driver| @drivers.index driver }.each.with_index do |driver, driver_index|
+        - team.drivers.sort_by{ |driver| @drivers.index(driver) || @drivers.count }.each.with_index do |driver, driver_index|
           %tr
             - standing = @team_standings[team]
             - if driver_index == 0
