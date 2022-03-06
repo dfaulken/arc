@@ -4,6 +4,7 @@ class Season < ApplicationRecord
   has_many :scores, through: :results
   has_many :drivers, through: :races
   has_many :standings, class_name: 'SeasonStanding', inverse_of: :season
+  has_many :teams
   belongs_to :championship
   belongs_to :points_system
 
@@ -78,6 +79,10 @@ class Season < ApplicationRecord
     grouped_sorters
   end
 
+  def drivers_without_teams
+    championship.drivers - drivers.joins(team_memberships: :team).where(teams: { season: self })
+  end
+
   def finish_date
     races.last.date + 1.day
   end
@@ -145,6 +150,10 @@ class Season < ApplicationRecord
       grouped[driver.name] = points_progression
     end
     grouped
+  end
+
+  def next_team_name
+    "Team #{teams.count.succ}"
   end
 
   def ongoing?

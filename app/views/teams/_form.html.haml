@@ -6,11 +6,16 @@
         - @team.errors.full_messages.each do |message|
           %li= message
 
-  .field
-    = f.label :season_id
-    = f.number_field :season_id
+  = f.hidden_field :season_id, value: @season.id
   .field
     = f.label :name
-    = f.text_field :name
+    = f.text_field :name, value: @team.name || @season.next_team_name, required: true
+  .field
+    Drivers
+    %table
+      - @eligible_drivers.each do |driver|
+        %tr
+          %td= f.check_box :drivers, { multiple: true, checked: @team.drivers.include?(driver) }, driver.id, nil
+          %td= f.label "drivers_#{driver.id}", driver.name
   .actions
     = f.submit 'Save'

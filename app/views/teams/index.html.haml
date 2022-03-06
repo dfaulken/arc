@@ -1,23 +1,23 @@
-%h1 Listing teams
-
-%table
-  %thead
-    %tr
-      %th Season
-      %th Name
-      %th
-      %th
-      %th
-
-  %tbody
-    - @teams.each do |team|
+- title 'Teams'
+%h1 #{@season.name}: Teams
+- if @teams.any?
+  %table
+    %thead
       %tr
-        %td= team.season_id
-        %td= team.name
-        %td= link_to 'Show', team
-        %td= link_to 'Edit', edit_team_path(team)
-        %td= link_to 'Destroy', team, method: :delete, data: { confirm: 'Are you sure?' }
+        %th Name
+        %th Drivers
+        %th
+        %th
 
+    %tbody
+      - @teams.each do |team|
+        %tr
+          %td= team.name
+          %td= team.driver_list
+          %td= link_to 'Edit', edit_team_path(team)
+          %td= link_to 'Destroy', team, method: :delete, data: { confirm: 'Are you sure?' }
+- else
+  No teams have been created for this season.
 %br
 
-= link_to 'New Team', new_team_path
+= link_to 'New Team', new_team_path(season: @season)
