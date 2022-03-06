@@ -35,7 +35,7 @@ class Championship < ApplicationRecord
 
   def next_season_index
     if seasons.any?(&:persisted?)
-      seasons.select(&:persisted?).max_by(&:index).succ
+      seasons.select(&:persisted?).map(&:index).max.succ
     else 1
     end
   end
