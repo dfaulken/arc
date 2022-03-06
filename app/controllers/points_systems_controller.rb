@@ -76,6 +76,7 @@ class PointsSystemsController < ApplicationController
     def points_system_params
       params.require(:points_system).permit(:name, :worst_rounds_dropped, 
         :pole_position_points, :any_lap_led_points, :most_laps_led_points, :race_finished_points,
+        :team_results_counted_per_race,
         points_allocations_attributes: %i[ id position points ])
     end
 end

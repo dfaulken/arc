@@ -90,6 +90,9 @@
         &.dropped a{
             color: red;
         }
+        &.dropped {
+            color: red;
+        }
     }
 
     td.points {

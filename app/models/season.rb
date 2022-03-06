@@ -104,15 +104,25 @@ class Season < ApplicationRecord
     teams.each do |team|
       team_scores = []
       team.drivers.each do |driver|
-        team_scores += grouped_driver_scores[driver].values.compact
+        team_scores += grouped_driver_scores[driver].values.compact if grouped_driver_scores.has_key?(driver)
+      end
+      if points_system.team_results_counted_per_race < team.drivers.count
+        counted_team_scores = []
+        races.each do |race|
+          team_race_scores = team_scores.select do |score|
+            score.race_result.race == race
+          end.sort_by(&:points).reverse
+          counted_team_scores += team_race_scores.first(points_system.team_results_counted_per_race)
+        end
+        team_scores = counted_team_scores
       end
       points = team_scores.sum(&:points)
       best_and_earliest_result = team_scores.map(&:race_result).min_by{ |rr| [rr.position, rr.race.date]}
       grouped_sorters[team] = [
         points * -1, # flip for sorting, flip back for recording
-        best_and_earliest_result.position,
+        best_and_earliest_result.try(:position),
         team_scores.count{|s| s.race_result.position == best_and_earliest_result.position} * -1, # flip for sorting
-        races.index(best_and_earliest_result.race)
+        races.index(best_and_earliest_result.try(:race))
       ]
     end
     grouped_sorters

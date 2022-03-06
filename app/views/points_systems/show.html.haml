@@ -18,6 +18,9 @@
 %p
   %strong Race finished points:
   = @points_system.race_finished_points
+%p
+  %strong Team results counted per race:
+  = @points_system.team_results_counted_per_race
 
 %ul
   - @points_system.points_allocations.each do |allocation|

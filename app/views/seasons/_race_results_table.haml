@@ -64,11 +64,11 @@
               %td.driver-name{rowspan: team.drivers.count}= team.name
             %td.driver-name= driver.name
             - @races.each do |race|
-              - result = @results[driver][race]
+              - result = @results[driver].try(:[], race)
               - if result
                 %td.result{class: race_result_classes(result)}= result.position
                 - score = @scores[driver][race]
-                %td.score= score.points
+                %td.score{class: ('dropped' unless result.counts_for_team?(team))}= score.points
               - else
                 %td
                 %td
