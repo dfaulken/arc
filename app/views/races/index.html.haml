@@ -15,7 +15,7 @@ Points system:
   = link_to 'Points standings live projection', projection_season_path(@season)
 - if @season.races.any?
   = render partial: 'seasons/race_results_table'
-  %h2 Points Progression
+  %h2 Points Progression (Drivers)
   Drivers who have been in the top 5 of the standings at any point are shown by default.
   %br
   Click on the driver names above the chart to show any others.
@@ -26,6 +26,8 @@ Points system:
 %br/
 - if mod_signed_in?
   = link_to 'New Race', new_race_path(season: @season)
+  %br
+  = link_to 'Teams', teams_path(season: @season)
   %br
 = link_to "Back to #{@season.championship.name}", seasons_path(championship: @season.championship)
 #points_progression_labels= @races.map(&:track).map(&:name).to_json
