@@ -2,23 +2,19 @@ class Driver < ApplicationRecord
   has_many :race_results
   has_many :races, through: :race_results
   has_many :seasons, through: :races
-  has_many :championships, through: :seasons
+  has_many :championship_drivers
+  has_many :championships, through: :championship_drivers
   has_many :incident_outcomes
   has_many :incidents, through: :incident_outcomes
   has_many :team_memberships
   has_many :teams, through: :team_memberships
 
   default_scope { order :name }
-  scope :with_car_number, -> { where.not car_number: [nil, ''] }
 
   validates :name, presence: true, uniqueness: true
-  validates :nickname, uniqueness: true, allow_blank: true
-  # TODO drivers should have different car numbers per-championship
-  validates :car_number, uniqueness: true, 
-    format: { with: /\A\d{1,3}\z/, message: 'must contain 1-3 digits' }, allow_blank: true
 
-  def car_number_as_integer
-    car_number.to_i
+  def championship_entry(championship)
+    championship_drivers.find_by championship: championship
   end
 
   def current_championship_outcomes(championship)
@@ -72,23 +68,11 @@ class Driver < ApplicationRecord
     potential_max_score >= score_to_beat
   end
 
-  # TODO this should go along with car numbers, per-championship
-  def last_season_raced
-    races.last.try(:season)
+  def inferred_championships
+    seasons.map(&:championship).uniq
   end
 
-  def numbered_name_with_nickname
-    str = name
-    if car_number.present?
-      str = "##{car_number} #{str}"
-    end
-    if nickname.present?
-      str = "#{str} (#{nickname})"
-    end
-    str
-  end
-
-  def self.free_numbers_below_100
-    0.upto(99).to_a - Driver.pluck(:car_number).compact.map(&:to_i) - [1] # champs
+  def last_season_raced(championship)
+    races.in_championship(championship).last.try(:season)
   end
 end

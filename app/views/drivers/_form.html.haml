@@ -1,4 +1,4 @@
-= form_with(model: driver) do |form|
+= form_with(model: driver, url: driver.persisted? ? driver_path(driver, championship: @championship) : drivers_path(championship: @championship)) do |form|
   - if driver.errors.any?
     #error_explanation
       %h2
@@ -10,11 +10,10 @@
   .field
     = form.label :name
     = form.text_field :name
-  .field
-    = form.label :nickname
-    = form.text_field :nickname
-  .field
-    = form.label :car_number
-    = form.text_field :car_number
+  = form.fields_for :championship_driver, @entry do |entry_fields|
+    .field
+      = entry_fields.hidden_field :championship_id, value: @championship.id
+      = entry_fields.label :car_number
+      = entry_fields.text_field :car_number
   .actions
     = form.submit

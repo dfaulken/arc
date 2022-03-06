@@ -20,9 +20,9 @@
   %tbody
     - @drivers.each do |driver|
       %tr
-        %td= driver.car_number
+        %td= driver.championship_entry(@championship).car_number
         %td= link_to driver.name, driver
-        %td= driver.last_season_raced.try(:name)
+        %td= driver.last_season_raced(@championship).try(:name)
 
 %h2 Numbers by Last Season Raced
 - @by_season.each_pair do |season, drivers|
@@ -35,5 +35,5 @@
     %tbody
       - drivers.each do |driver|
         %tr
-          %td= driver.car_number
+          %td= driver.championship_entry(@championship).car_number
           %td= link_to driver.name, driver

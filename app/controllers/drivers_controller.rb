@@ -1,10 +1,11 @@
 class DriversController < ApplicationController
+  before_action :set_championship, only: %i[ create edit new index numbers update ]
   before_action :set_driver, only: %i[ show edit update destroy ]
   before_action :authenticate_mod!, except: %i[ index show numbers ]
 
   # GET /drivers or /drivers.json
   def index
-    @drivers = Driver.all
+    @drivers = @championship.drivers
   end
 
   # GET /drivers/1 or /drivers/1.json
@@ -16,19 +17,23 @@ class DriversController < ApplicationController
   # GET /drivers/new
   def new
     @driver = Driver.new
+    @entry = ChampionshipDriver.new championship: @championship, driver: @driver
   end
 
   # GET /drivers/1/edit
   def edit
+    @entry = @driver.championship_entry(@championship)
   end
 
   # POST /drivers or /drivers.json
   def create
     @driver = Driver.new(driver_params)
+    @entry = ChampionshipDriver.new(championship_driver_params)
+    @entry.driver = @driver
 
     respond_to do |format|
-      if @driver.save
-        format.html { redirect_to drivers_path, notice: "Driver was successfully created." }
+      if @driver.save && @entry.save
+        format.html { redirect_to drivers_path(championship: @championship), notice: "Driver was successfully created and registered to championship." }
         format.json { render :show, status: :created, location: @driver }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -40,8 +45,8 @@ class DriversController < ApplicationController
   # PATCH/PUT /drivers/1 or /drivers/1.json
   def update
     respond_to do |format|
-      if @driver.update(driver_params)
-        format.html { redirect_to drivers_path, notice: "Driver was successfully updated." }
+      if @driver.update(driver_params) && @driver.championship_entry(@championship).update(championship_driver_params)
+        format.html { redirect_to drivers_path(championship: @championship), notice: "Driver was successfully updated." }
         format.json { render :show, status: :ok, location: @driver }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -54,18 +59,25 @@ class DriversController < ApplicationController
   def destroy
     @driver.destroy
     respond_to do |format|
-      format.html { redirect_to drivers_url, notice: "Driver was successfully destroyed." }
+      format.html { redirect_to drivers_url(championship: @championship), notice: "Driver was successfully destroyed." }
       format.json { head :no_content }
     end
   end
 
   def numbers
-    @drivers = Driver.with_car_number.sort_by(&:car_number_as_integer)
-    @by_season = @drivers.group_by(&:last_season_raced)
-    @free = Driver.free_numbers_below_100
+    @drivers = @championship.championship_drivers.with_car_number.sort_by(&:car_number_as_integer).map(&:driver)
+    @by_season = @drivers.group_by do |driver|
+      driver.last_season_raced(@championship)
+    end
+    @free = @championship.free_numbers_below_100
+    #binding.pry
   end
 
   private
+    def set_championship
+      @championship = Championship.find params.require(:championship)
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_driver
       @driver = Driver.find(params[:id])
@@ -73,7 +85,11 @@ class DriversController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def driver_params
-      params.require(:driver).permit(:name, :nickname, :car_number)
+      params.require(:driver).permit(:name, :car_number, championship_driver: %i[car_number championship_id]).except(:championship_driver)
+    end
+
+    def championship_driver_params
+      params.require(:driver).require(:championship_driver).permit(:car_number, :championship_id)
     end
 
     def construct_driver_results

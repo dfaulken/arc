@@ -14,7 +14,7 @@
             = result_form.number_field :position, readonly: true
           %td
             = result_form.label :driver_id
-            = result_form.select :driver_id, options_from_collection_for_select(Driver.all, :id, :name), include_blank: true, required: true
+            = result_form.select :driver_id, options_from_collection_for_select(@race.season.championship.drivers, :id, :name), include_blank: true, required: true
           %td
             = result_form.label :scored_pole_position
             = check_box_tag 'results[][scored_pole_position]', true, result.scored_pole_position?

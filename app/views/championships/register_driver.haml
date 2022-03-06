@@ -1,0 +1,13 @@
+- title 'Register Driver'
+%p#notice= notice
+%h1 Register Driver
+
+= form_with url: register_driver_championship_url(@championship) do |form|
+  .field
+    = form.label :driver_id, 'Driver'
+    = form.select :driver_id, options_from_collection_for_select(@drivers, :id, :name)
+  .field
+    = form.label :car_number
+    = form.text_field :car_number
+  .actions
+    = form.submit 'Register driver to championship'

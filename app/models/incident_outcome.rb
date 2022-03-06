@@ -9,4 +9,9 @@ class IncidentOutcome < ApplicationRecord
   scope :active, -> { where 'expires_at > ?', DateTime.now }
   scope :published, -> { where published: true }
   scope :unpublished, -> { where.not published: true }
+
+  def default_expiration_date
+    incident.race.date + 6.months
+  end
+
 end

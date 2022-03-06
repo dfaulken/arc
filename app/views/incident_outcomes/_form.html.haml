@@ -20,9 +20,7 @@
     = f.number_field :penalty_points, required: true, min: 0
   .field
     = f.label :expires_at
-    %em This defaults to the day after the last race of the season.
-    %br
-    = f.datetime_select :expires_at, default: @incident.race.season.finish_date
+    = f.datetime_select :expires_at, default: @incident_outcome.default_expiration_date
   .field
     = f.label :explanation
     = f.text_area :explanation, size: '75x20'

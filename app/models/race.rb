@@ -8,6 +8,7 @@ class Race < ApplicationRecord
 
   default_scope { order :date }
 
+  scope :in_championship, -> (championship) { joins(:season).where(seasons: { championship: championship } ) }
   scope :of_type, -> (track_type) { joins(:track).where(tracks: { track_type: track_type }) }
 
   validates :date, presence: true, uniqueness: { scope: :season }
@@ -23,6 +24,10 @@ class Race < ApplicationRecord
         score.save!
       end
     end
+  end
+
+  def incomplete?
+    results.none?
   end
 
   def name

@@ -10,10 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2022_01_30_172057) do
+=======
+ActiveRecord::Schema.define(version: 2022_03_04_040500) do
+>>>>>>> main
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "championship_drivers", force: :cascade do |t|
+    t.integer "championship_id"
+    t.integer "driver_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "car_number"
+  end
 
   create_table "championships", force: :cascade do |t|
     t.string "name"
@@ -25,10 +37,8 @@ ActiveRecord::Schema.define(version: 2022_01_30_172057) do
 
   create_table "drivers", force: :cascade do |t|
     t.string "name"
-    t.string "nickname"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "car_number"
   end
 
   create_table "dropped_races", force: :cascade do |t|

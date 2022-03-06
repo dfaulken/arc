@@ -1,0 +1,65 @@
+- title 'Points Projection'
+%h1= @season.name
+%h2 Points Standings Live Projection
+= link_to "Back to #{@season.name}", races_path(season: @season)
+
+- if @drivers.present?
+  Drag drivers to reorder and preview points standings projections.
+  .projection
+    .positions
+      %ul
+        - 1.upto(@drivers.count).each do |n|
+          %li.position-number= n
+    .driver-positions
+      %ul.drivers
+        - @drivers.each do |driver|
+          %li.driver{ data: { driver_id: driver.id } }
+            .driver-name= driver.name
+            .led-lap
+              .text Led a lap
+              %span.icon &#10004;
+            .dnf
+              .text DNF
+              %span.icon &#10006;
+    .points
+      %table
+        %tr
+          %td= label_tag :pole_position, 'Pole position:'
+          %td= select_tag :pole_position, options_from_collection_for_select(@drivers, :id, :name), include_blank: true
+        %tr
+          %td= label_tag :led_most_laps, 'Led most laps:'
+          %td= select_tag :led_most_laps, options_from_collection_for_select(@drivers, :id, :name), include_blank: true
+      .projection-results
+        %table
+          %thead 
+            %tr
+              %th Standings before race
+              %th Provisional standings after race
+          %tbody
+            %tr
+              %td
+                %table
+                  - @standings.each do |standing|
+                    %tr
+                      %td= standing.position
+                      %td= standing.driver.name
+                      %td= standing.points
+              %td
+                .results
+  = link_to 'Reselect drivers', projection_season_path(@season, selected: @drivers.pluck(:id))
+- else
+  .selection
+    Select drivers who are entered in the race:
+    = form_with url: projection_season_path(@season), method: :get do |form|
+      - drivers_per_column = 20
+      - columns = (@all_drivers.count / drivers_per_column) + 1
+      %table
+        - 1.upto(drivers_per_column).each do |row|
+          %tr
+            - 1.upto(columns).each do |column|
+              - driver_index = (column - 1) * drivers_per_column + row - 1
+              - driver = @all_drivers[driver_index]
+              - if driver
+                %td= form.check_box :drivers, { multiple: true, checked: @selected.include?(driver)}, driver.id, nil
+                %td= form.label "drivers_#{driver.id}", driver.name
+      = form.submit 'Select drivers'

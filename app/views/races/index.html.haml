@@ -10,6 +10,9 @@ Points system:
     %br
   - if @track_type
     = link_to "View all standings", races_path(season: @season)
+- if @season.ongoing?
+  %br
+  = link_to 'Points standings live projection', projection_season_path(@season)
 - if @season.races.any?
   = render partial: 'seasons/race_results_table'
   %h2 Points Progression

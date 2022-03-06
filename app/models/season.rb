@@ -35,6 +35,49 @@ class Season < ApplicationRecord
     calculate_standings_for! TrackType.any
   end
 
+  def calculate_projection(provisional_results)
+    provisional_scores = grouped_scores(TrackType.any)
+    provisional_results.each do |result|
+      unless provisional_scores.key? result.driver
+        provisional_scores[result.driver] = {}
+      end
+      driver_scores = provisional_scores[result.driver]
+      driver_scores[result.race] = result.calculate_score
+    end
+    projection = []
+    standings = calculate_standings_for(TrackType.any, provisional_scores)
+    sorted_drivers = standings.keys.sort_by do |driver|
+      standings[driver].first
+    end
+    sorted_drivers.each do |driver|
+      projection << [driver.name, standings[driver].first * -1]
+    end
+    projection
+  end
+
+  def calculate_standings_for(track_type, grouped_scores)
+    grouped_sorters = {}
+    grouped_scores.each_pair do |driver, race_score_map|
+      all_driver_scores = race_score_map.keys.sort_by(&:date).map{ |race| race_score_map[race] }
+      best_result = all_driver_scores.compact.map(&:race_result).min_by(&:position)
+      best_result_score = race_score_map[best_result.race]
+      included_driver_scores = drop_scores(all_driver_scores, track_type)
+      dropped_scores = (all_driver_scores - included_driver_scores).compact
+      base_points = all_driver_scores.compact.sum(&:points)
+      dropped_points = dropped_scores.sum(&:points)
+      points = base_points - dropped_points
+      # Points, best result, count of best result, index of first race where best result was scored
+      grouped_sorters[driver] = [
+        points * -1, # flip for sorting, flip back for recording
+        best_result.position,
+        all_driver_scores.compact.count{|score| score.race_result.position == best_result.position } * -1, # flip for sorting
+        all_driver_scores.index(best_result_score),
+        dropped_scores
+      ]
+    end
+    grouped_sorters
+  end
+
   def finish_date
     races.last.date + 1.day
   end
@@ -121,25 +164,7 @@ class Season < ApplicationRecord
   private
 
   def calculate_standings_for!(track_type)
-    grouped_sorters = {}
-    grouped_scores(track_type).each_pair do |driver, race_score_map|
-      all_driver_scores = race_score_map.keys.sort_by(&:date).map{ |race| race_score_map[race] }
-      best_result = all_driver_scores.compact.map(&:race_result).min_by(&:position)
-      best_result_score = race_score_map[best_result.race]
-      included_driver_scores = drop_scores(all_driver_scores, track_type)
-      dropped_scores = (all_driver_scores - included_driver_scores).compact
-      base_points = all_driver_scores.compact.sum(&:points)
-      dropped_points = dropped_scores.sum(&:points)
-      points = base_points - dropped_points
-      # Points, best result, count of best result, index of first race where best result was scored
-      grouped_sorters[driver] = [
-        points * -1, # flip for sorting, flip back for recording
-        best_result.position,
-        all_driver_scores.compact.count{|score| score.race_result.position == best_result.position } * -1, # flip for sorting
-        all_driver_scores.index(best_result_score),
-        dropped_scores
-      ]
-    end
+    grouped_sorters = calculate_standings_for(track_type, grouped_scores(track_type))
     sorted_drivers = grouped_sorters.keys.sort_by do |driver|
       grouped_sorters[driver]
     end

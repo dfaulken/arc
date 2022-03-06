@@ -12,9 +12,9 @@ class Score < ApplicationRecord
     end
     if race_result.laps_led > 0
       self.points += points_system.any_lap_led_points
-      if race_result.most_laps_led?
-        self.points += points_system.most_laps_led_points
-      end
+    end
+    if race_result.most_laps_led?
+      self.points += points_system.most_laps_led_points
     end
     if race_result.finished_race?
       self.points += points_system.race_finished_points
