@@ -25,6 +25,9 @@
             = result_form.label :finished_race
             = check_box_tag 'results[][finished_race]', true, result.finished_race?
           %td
+            = result_form.label :disqualified
+            = check_box_tag 'results[][disqualified]', true, result.disqualified?
+          %td
             %ul
               - result.errors.full_messages.each do |message|
                 %li= message

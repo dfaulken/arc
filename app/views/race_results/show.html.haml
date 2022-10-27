@@ -10,6 +10,12 @@
   %strong Position:
   = @race_result.position
 %p
+  %strong Effective position (after any disqualifications):
+  = @race_result.effective_position
+  (
+  = @race_result.effective_position_text
+  )
+%p
   %strong Scored pole position:
   = @race_result.scored_pole_position
 %p
@@ -19,14 +25,17 @@
   %strong Led most laps?
   = @race_result.most_laps_led?
 %p
-  %strong Finished race:
-  = @race_result.finished_race
+  %strong Finished race?
+  = @race_result.finished_race?
+%p
+  %strong Disqualified?
+  = @race_result.disqualified?
 - @race_result.scores.each do |score|
   %h3 Points Breakdown (#{score.points_system.name})
   %ul
     %li
       %strong Base points for finishing position:
-      = score.points_system.points_for @race_result.position
+      = score.points_system.points_for @race_result.effective_position
     %li
       %strong Bonus points:
       - if @race_result.earned_bonus_points? score.points_system
@@ -52,5 +61,7 @@
     %li
       %strong Total points:
       = score.points
+      - if @race_result.disqualified?
+        (disqualified)
 - if mod_signed_in?
   = link_to 'Edit', edit_race_result_path(@race_result, race: @race_result.race)

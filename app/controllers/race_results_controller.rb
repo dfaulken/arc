@@ -40,6 +40,9 @@ class RaceResultsController < ApplicationController
         if !result_params.key?(:finished_race)
           result.finished_race = false
         end
+        if !result_params.key?(:disqualified)
+          result.disqualified = false
+        end
         result.most_laps_led = false
         result
       end
@@ -96,6 +99,6 @@ class RaceResultsController < ApplicationController
     end
 
     def screen_race_result_params(params)
-      params.permit(:race_id, :driver_id, :scored_pole_position, :laps_led, :finished_race, :position)
+      params.permit(:race_id, :driver_id, :scored_pole_position, :laps_led, :finished_race, :position, :disqualified)
     end
 end

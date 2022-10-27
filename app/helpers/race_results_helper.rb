@@ -1,12 +1,16 @@
 module RaceResultsHelper
   def race_result_classes(result)
     classes = []
-    classes << case result.position
-    when 1 then 'p1'
-    when 2 then 'p2'
-    when 3 then 'p3'
-    when 4..10 then 'p4-p10'
-    else 'below-p10'
+    if result.disqualified?
+      classes << 'dsq'
+    else
+      classes << case result.effective_position
+      when 1 then 'p1'
+      when 2 then 'p2'
+      when 3 then 'p3'
+      when 4..10 then 'p4-p10'
+      else 'below-p10'
+      end
     end
     classes << 'pole' if result.scored_pole_position?
     classes << 'led-lap' if result.laps_led > 0

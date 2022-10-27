@@ -22,7 +22,7 @@
     %tr
       - results[:races].values.each do |race_result|
         - if race_result
-          %td.result{class: race_result_classes(race_result)}= race_result.position
+          %td.result{class: race_result_classes(race_result)}= race_result.effective_position_text
         - else
           %td.result
       - empty_cells.times do |empty_cell|

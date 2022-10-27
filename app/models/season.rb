@@ -80,7 +80,7 @@ class Season < ApplicationRecord
     grouped_sorters = {}
     grouped_scores.each_pair do |driver, race_score_map|
       all_driver_scores = race_score_map.keys.sort_by(&:date).map{ |race| race_score_map[race] }
-      best_result = all_driver_scores.compact.map(&:race_result).min_by(&:position)
+      best_result = all_driver_scores.compact.map(&:race_result).min_by(&:effective_position)
       best_result_score = race_score_map[best_result.race]
       included_driver_scores = drop_scores(all_driver_scores, track_type)
       dropped_scores = (all_driver_scores - included_driver_scores).compact
@@ -90,8 +90,8 @@ class Season < ApplicationRecord
       # Points, best result, count of best result, index of first race where best result was scored
       grouped_sorters[driver] = [
         points * -1, # flip for sorting, flip back for recording
-        best_result.position,
-        all_driver_scores.compact.count{|score| score.race_result.position == best_result.position } * -1, # flip for sorting
+        best_result.effective_position,
+        all_driver_scores.compact.count{|score| score.race_result.effective_position == best_result.effective_position } * -1, # flip for sorting
         all_driver_scores.index(best_result_score),
         dropped_scores
       ]
@@ -117,11 +117,11 @@ class Season < ApplicationRecord
         team_scores = counted_team_scores
       end
       points = team_scores.sum(&:points)
-      best_and_earliest_result = team_scores.map(&:race_result).min_by{ |rr| [rr.position, rr.race.date]}
+      best_and_earliest_result = team_scores.map(&:race_result).min_by{ |rr| [rr.effective_position, rr.race.date]}
       grouped_sorters[team] = [
         points * -1, # flip for sorting, flip back for recording
-        best_and_earliest_result.try(:position),
-        team_scores.count{|s| s.race_result.position == best_and_earliest_result.position} * -1, # flip for sorting
+        best_and_earliest_result.try(:effective_position),
+        team_scores.count{|s| s.race_result.effective_position == best_and_earliest_result.effective_position} * -1, # flip for sorting
         races.index(best_and_earliest_result.try(:race))
       ]
     end

@@ -82,6 +82,10 @@
         &.non-finisher {
             color: red;
         }
+        &.dsq {
+            background: black;
+            color: white;
+        }
     }
 
     td.score {

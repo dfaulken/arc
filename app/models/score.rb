@@ -6,7 +6,11 @@ class Score < ApplicationRecord
   validates :points_system, uniqueness: { scope: :race_result }
 
   def calculate!
-    self.points = points_system.points_for race_result.position
+    if race_result.disqualified?
+      self.points = 0
+      return
+    end
+    self.points = points_system.points_for race_result.effective_position
     if race_result.scored_pole_position?
       self.points += points_system.pole_position_points
     end

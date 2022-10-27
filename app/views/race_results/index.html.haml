@@ -13,20 +13,24 @@
     %thead
       %tr
         %th Position
+        %th Effective position
         %th Driver
         %th Scored pole position
         %th Laps led
         %th Most laps led?
-        %th Finished race
+        %th Finished race?
+        %th Disqualified?
         %th Points
     %tbody
       - @race_results.each do |race_result|
         %tr
           %td= race_result.position
+          %td= race_result.effective_position
           %td= race_result.driver.championship_entry(@race.season.championship).numbered_name
           %td= race_result.scored_pole_position? ? 'Yes' : ''
           %td= race_result.laps_led
           %td= race_result.most_laps_led? ? 'Yes' : ''
+          %td= race_result.disqualified? ? 'Yes' : ''
           %td= race_result.finished_race
           %td
             - if race_result.scores.one?

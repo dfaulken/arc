@@ -22,7 +22,7 @@ class Championship < ApplicationRecord
   end
 
   def finishes(track_type:)
-    results.joins(race: :track).where(tracks: { track_type: track_type })
+    results.joins(race: :track).where(tracks: { track_type: track_type }).not_disqualified
   end
 
   def free_numbers_below_100
@@ -66,6 +66,7 @@ class Championship < ApplicationRecord
     tracks.pluck(:track_type).uniq
   end
 
+  # TODO this doesn't account for the winner being disqualified
   def wins(track_type:)
     finishes(track_type: track_type).where(position: 1)
   end

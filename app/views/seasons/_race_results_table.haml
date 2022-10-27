@@ -31,7 +31,8 @@
         - @races.each do |race|
           - result = @results[driver][race]
           - if result
-            %td.result{class: race_result_classes(result)}= result.position
+            %td.result{class: race_result_classes(result)}
+              = result.effective_position_text
             - score = @scores[driver][race]
             %td.score{class: ('dropped' if standing.drops? result)}= link_to score.points, result
           - else
@@ -66,7 +67,7 @@
             - @races.each do |race|
               - result = @results[driver].try(:[], race)
               - if result
-                %td.result{class: race_result_classes(result)}= result.position
+                %td.result{class: race_result_classes(result)}= result.effective_position_text
                 - score = @scores[driver][race]
                 %td.score{class: ('dropped' unless result.counts_for_team?(team))}= score.points
               - else

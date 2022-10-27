@@ -6,6 +6,8 @@ class RaceResult < ApplicationRecord
   default_scope { order :position }
 
   scope :of_type, -> (track_type) { joins(race: :track).where(tracks: { track_type: track_type }) }
+  scope :disqualified, -> { where disqualified: true }
+  scope :not_disqualified, -> { where disqualified: [false, nil] }
 
   validates :driver, uniqueness: { scope: :race }
   validates :scored_pole_position, inclusion: { in: [true, false] }
@@ -13,6 +15,7 @@ class RaceResult < ApplicationRecord
   validates :finished_race, inclusion: { in: [true, false] }
   validates :position, presence: true
   validates :most_laps_led, inclusion: { in: [true, false] }
+  validates :disqualified, inclusion: { in: [true, false] }
 
   after_create -> { calculate_and_persist_score! }
   after_update -> { scores.each(&:calculate!) && scores.each(&:save) && race.season.calculate_standings! }
@@ -45,6 +48,20 @@ class RaceResult < ApplicationRecord
     (points_system.any_lap_led_points > 0 && laps_led > 0) ||
     (points_system.most_laps_led_points > 0 && most_laps_led?) ||
     (points_system.race_finished_points > 0 && finished_race?)
+  end
+
+  def effective_position
+    if disqualified?
+      race.results.not_disqualified.count + race.results.disqualified.index(self) + 1
+    else position - race.results.disqualified.where('position < ?', position).count
+    end
+  end
+
+  def effective_position_text
+    if disqualified?
+      'DSQ'
+    else effective_position.to_s
+    end
   end
 
   def score
