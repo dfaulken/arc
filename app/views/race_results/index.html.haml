@@ -30,8 +30,8 @@
           %td= race_result.scored_pole_position? ? 'Yes' : ''
           %td= race_result.laps_led
           %td= race_result.most_laps_led? ? 'Yes' : ''
+          %td= race_result.finished_race ? '' : 'No'
           %td= race_result.disqualified? ? 'Yes' : ''
-          %td= race_result.finished_race
           %td
             - if race_result.scores.one?
               = race_result.scores.first.points
