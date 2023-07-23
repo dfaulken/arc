@@ -17,6 +17,10 @@ class Driver < ApplicationRecord
     championship_drivers.find_by championship: championship
   end
 
+  def championship_name(championship)
+    championship_entry(championship).try(:numbered_name) || name
+  end
+
   def current_championship_outcomes(championship)
     incident_outcomes.active.published.joins(incident: { race: :season })
        .where(seasons: { championship_id: championship.id })
